@@ -90,9 +90,9 @@ class tokenize_spacy_test(LabTest):
 	def runTest(self):
 		testcases = [
 			{"input": "John's father didn't have $100.", "output": ["John", "'s", "father", "did", "n't", "have", "$", "100", "."]},
-			{"input": "Where we're going, we won't need roads.", "output": ["Where", "we", "'re", "going", ",", "we", "wo", "n't", "need", "roads", "."]},
+			{"input": "You can't handle the truth!", "output": ["You", "ca", "n't", "handle", "the", "truth", "!"]},
 			{"input": "I'm going to make him an offer he can't refuse.", "output": ["I", "'m", "going", "to", "make", "him", "an", "offer", "he", "ca", "n't", "refuse", "."]},
-			{"input": "It's-a Me, Mario!", "output": ["It's", "-", "a", "Me", ",", "Mario", "!"]},
+			{"input": "The flow of time is always cruel.", "output": ["The", "flow", "of", "time", "is", "always", "cruel", "."]},
 			{"input": "Mess with the best, die like the rest.", "output": ["Mess", "with", "the", "best", ",", "die", "like", "the", "rest", "."]},
 		]
 		
@@ -102,9 +102,9 @@ class text_pipeline_spacy_test(LabTest):
 	def runTest(self):
 		testcases = [
 			{"input": "John's father didn't have $100.", "output": ["john", "father", "$", "100"]},
-			{"input": "Where we're going, we won't need roads.", "output": ["go", "wo", "need", "road"]},
+			{"input": "You can't handle the truth!", "output": ["handle", "truth"]},
 			{"input": "I'm going to make him an offer he can't refuse.", "output": ["go", "offer", "refuse"]},
-			{"input": "It's-a Me, Mario!", "output": ["it'", "mario"]},
+			{"input": "The flow of time is always cruel.", "output": ["flow", "time", "cruel"]},
 			{"input": "Mess with the best, die like the rest.", "output": ["mess", "good", "die", "like", "rest"]},
 		]
 		
