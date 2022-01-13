@@ -20,7 +20,6 @@ class tokenize_strsplit_test(LabTest):
 			{"input": "I'm going to make him an offer he can't refuse.", "output": ["I'm", "going", "to", "make", "him", "an", "offer", "he", "can't", "refuse."]},
 			{"input": "It's-a Me, Mario!", "output": ["It's-a", "Me,", "Mario!"]},
 			{"input": "Mess with the best, die like the rest.", "output": ["Mess", "with", "the", "best,", "die", "like", "the", "rest."]},
-
 		]
 		
 		self.run_testcases(testcases)
@@ -38,6 +37,18 @@ class tokenize_punctuation_test(LabTest):
 		
 		self.run_testcases(testcases)
 
+class stem_onerule_test(LabTest):
+	def runTest(self):
+		testcases = [
+			{"input": ["We", "are", "going", "fishing", "."], "output": ["We", "are", "go", "fish", "."]},
+			{"input": ["He", "walked", "home", "."], "output": ["He", "walked", "home", "."]},
+			{"input": ["She", "loves", "Irn", "Bru", "."], "output": ["She", "loves", "Irn", "Bru", "."]},
+			{"input": ["I", "love", "reading", "books", "."], "output": ["I", "love", "read", "books", "."]},
+			{"input": ["David", "runs", "every", "day", "."], "output": ["David", "runs", "every", "day", "."]},
+		]
+		
+		self.run_testcases(testcases)
+		
 class stem_morerules_test(LabTest):
 	def runTest(self):
 		testcases = [
