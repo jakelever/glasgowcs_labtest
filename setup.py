@@ -11,5 +11,5 @@ setup(name='glasgowcs_labtest',
 	author='Jake Lever',
 	author_email='jake.lever@glasgow.ac.uk',
 	license='MIT',
-	packages=find_packages(),)
+	packages=find_packages())
 	

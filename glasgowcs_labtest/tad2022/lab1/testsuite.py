@@ -1,5 +1,4 @@
-
-from uofgcs_labtest.utils import LabTest
+from glasgowcs_labtest.utils import LabTest
 
 class multiply_by_three_test(LabTest):
 	def runTest(self):
@@ -12,4 +11,3 @@ class multiply_by_three_test(LabTest):
 		]
 		
 		self.run_testcases(testcases)
-	
