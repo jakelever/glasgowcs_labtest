@@ -11,7 +11,11 @@ class LabTest(unittest.TestCase):
 		
 	def run_testcases(self, testcases):
 		for testcase in testcases:
-			self.assertEqual(self.function(testcase['input']), testcase['output'], msg=f"Expected the output of {self.function.__name__}({testcase['input']}) would be {testcase['output']}")
+			assert isinstance(testcase['input'], tuple), "A testcase has been incorrectly set up. Inputs for testcases must be tuples"
+			
+			input_txt = str(testcase['input'])[1:-1].rstrip(',') # Strip off the brackets and potential right comma for nice output
+		
+			self.assertEqual(self.function(*testcase['input']), testcase['output'], msg=f"Expected the output of {self.function.__name__}({input_txt}) would be {testcase['output']}")
 
 
 	
@@ -63,7 +67,6 @@ def list_classes(module):
 def labtest_main(module, function):
 	assert isinstance(module, ModuleType), "The labtest method is malfunctioning as it is not correctly passing in the test suite for this lab"
 	classes_in_module = list_classes(module)
-	
 	
 	assert not isinstance(function, str), "You've passed in a string to labtest (perhaps the name of function to test?). You need to pass in the actual function instead. For example do labtest({function}) instead of labtest(\"{function}\")"
 
