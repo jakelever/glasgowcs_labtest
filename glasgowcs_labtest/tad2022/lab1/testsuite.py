@@ -24,7 +24,7 @@ class tokenize_strsplit_test(LabTest):
 		
 		self.run_testcases(testcases)
 		
-class tokenize_punctuation_test(LabTest):
+class tokenize_rulebased_test(LabTest):
 	def runTest(self):
 		testcases = [
 			{"input": ("John's father didn't have $100.",), "output": ["John", "'", "s", "father", "didn", "'", "t", "have", "$", "100", "."]},
@@ -40,8 +40,8 @@ class tokenize_punctuation_test(LabTest):
 class stem_onerule_test(LabTest):
 	def runTest(self):
 		testcases = [
-			{"input": (["We", "are", "going", "fishing", "."],), "output": ["We", "are", "go", "fish", "."]},
-			{"input": (["He", "walked", "home", "."],), "output": ["He", "walked", "home", "."]},
+			{"input": (["He", "is", "going", "fishing", "."],), "output": ["He", "is", "go", "fish", "."]},
+			{"input": (["We", "walked", "home", "."],), "output": ["We", "walked", "home", "."]},
 			{"input": (["She", "loves", "Irn", "Bru", "."],), "output": ["She", "loves", "Irn", "Bru", "."]},
 			{"input": (["I", "love", "reading", "books", "."],), "output": ["I", "love", "read", "books", "."]},
 			{"input": (["David", "runs", "every", "day", "."],), "output": ["David", "runs", "every", "day", "."]},
@@ -52,8 +52,8 @@ class stem_onerule_test(LabTest):
 class stem_morerules_test(LabTest):
 	def runTest(self):
 		testcases = [
-			{"input": (["We", "are", "going", "fishing", "."],), "output": ["We", "are", "go", "fish", "."]},
-			{"input": (["He", "walked", "home", "."],), "output": ["He", "walk", "home", "."]},
+			{"input": (["He", "is", "going", "fishing", "."],), "output": ["He", "is", "go", "fish", "."]},
+			{"input": (["We", "walked", "home", "."],), "output": ["We", "walk", "home", "."]},
 			{"input": (["She", "loves", "Irn", "Bru", "."],), "output": ["She", "love", "Irn", "Bru", "."]},
 			{"input": (["I", "love", "reading", "books", "."],), "output": ["I", "love", "read", "book", "."]},
 			{"input": (["David", "runs", "every", "day", "."],), "output": ["David", "run", "every", "day", "."]},
