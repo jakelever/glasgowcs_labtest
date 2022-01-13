@@ -2,7 +2,7 @@
 
 from distutils.core import setup
 
-from setuptools import setup
+from setuptools import setup,find_packages
 
 setup(name='glasgowcs_labtest',
 	version='1.0.1',
@@ -11,5 +11,5 @@ setup(name='glasgowcs_labtest',
 	author='Jake Lever',
 	author_email='jake.lever@glasgow.ac.uk',
 	license='MIT',
-	packages=['glasgowcs_labtest'])
+	packages=find_packages(),)
 	
