@@ -1,35 +1,55 @@
 
-import unittest
 import inspect
 import sys
-from types import ModuleType
 
-class LabTest(unittest.TestCase):
-	def __init__(self, function):
-		super(LabTest, self).__init__()
-		self.function = function
+def run_testcases(function, testcases):
+	header = f"LABTEST: Running {len(testcases)} testcases"
+
+	print("-"*len(header))
+	print(header)
+	print("-"*len(header))
+	
+	for testcase in testcases:
+		assert isinstance(testcase['input'], tuple), "A testcase has been incorrectly set up. Inputs for testcases must be tuples"
 		
-	def run_testcases(self, testcases):
+		print(f"Input: {str(testcase['input'])}. Running... ",)
+		
+		# Run the function and get the output
+		output = function(*testcase['input'])
+		
+		input_txt = str(testcase['input'])[1:-1].rstrip(',') # Strip off the brackets and potential right comma for nice output
+		error_msg = f"\n\nERROR: Expected the output of {function.__name__}({input_txt}) to be {testcase['output']}. Got {output}."
+		
+		assert output == testcase['output'], error_msg
+		
+		print("OK.")
+		
+	
+	footer = f"{len(testcases)} testcases PASSED"
+
+	print("-"*len(header))
+	print(footer)
+	print("-"*len(header))
+
+def validate_testcases(all_testcases):
+	assert isinstance(all_testcases, dict), "The labtest method is malfunctioning as it is not correctly passing in the test suite for this lab"
+	
+	assert len(all_testcases) > 0, "The test suite for this lab contains no testcases"
+	
+	for func_name,testcases in all_testcases.items():
+		assert isinstance(func_name, str), "The testcases for this lab are malformed"
+		assert isinstance(testcases, list), "The testcases for this lab are malformed"
 		for testcase in testcases:
-			assert isinstance(testcase['input'], tuple), "A testcase has been incorrectly set up. Inputs for testcases must be tuples"
-			
-			input_txt = str(testcase['input'])[1:-1].rstrip(',') # Strip off the brackets and potential right comma for nice output
+			assert isinstance(testcase, dict), "The testcases for this lab are malformed"
+			assert "input" in testcase, "The testcases for this lab are malformed"
+			assert "output" in testcase, "The testcases for this lab are malformed"
+			assert isinstance(testcase["input"],tuple), "The testcases for this lab are malformed"
+	
+def setup_docstring(labtest_function, all_testcases):
+	validate_testcases(all_testcases)
+
+	assert callable(labtest_function) and labtest_function.__name__ == 'labtest', "The test suite setup is malfunctioning as it is not correctly passing in the labtest function for this lab"
 		
-			self.assertEqual(self.function(*testcase['input']), testcase['output'], msg=f"Expected the output of {self.function.__name__}({input_txt}) would be {testcase['output']}")
-
-
-	
-	
-def setup_docstring(module, function):
-	assert isinstance(module, ModuleType), "The test suite setup is malfunctioning as it is not correctly passing in the test suite for this lab"
-	assert callable(function) and function.__name__ == 'labtest', "The test suite setup is malfunctioning as it is not correctly passing in the labtest function for this lab"
-	
-	classes_in_module = list_classes(module)
-
-	available_tests = [ name[:-5] for name in classes_in_module.keys() if name.endswith('_test') ]
-	
-	assert len(available_tests) > 0, "There are appear to be tests available for this test suite"
-	
 	docstring = """Runs tests on a specific function in this lab. It will output test status and throw an error if any of the tests fail with information about the provided input and expected output.
 	
 	The functions that can be tested with this labtest are TESTLIST.
@@ -48,25 +68,16 @@ def setup_docstring(module, function):
 
 	"""
 	
-	available_tests_str = str(available_tests).replace('"','').replace("'","")
-	docstring = docstring.replace('TESTLIST',available_tests_str)
-	docstring = docstring.replace('FUNCNAME',available_tests[0])
+	test_names = str(list(all_testcases.keys()))
+	test_names = str(test_names).replace('"','').replace("'","")
+	docstring = docstring.replace('TESTLIST',test_names)
+	docstring = docstring.replace('FUNCNAME',list(all_testcases)[0])
 	docstring = docstring.replace('\t','  ')
 	
-	function.__doc__ = docstring
-	
-	
-	
-def list_classes(module):
-	classes_by_name = {}
-	for name, obj in inspect.getmembers(module):
-		if inspect.isclass(obj):
-			classes_by_name[name] = obj
-	return classes_by_name
+	labtest_function.__doc__ = docstring
 
-def labtest_main(module, function):
-	assert isinstance(module, ModuleType), "The labtest method is malfunctioning as it is not correctly passing in the test suite for this lab"
-	classes_in_module = list_classes(module)
+def labtest_main(function,all_testcases):
+	validate_testcases(all_testcases)
 	
 	assert not isinstance(function, str), "You've passed in a string to labtest (perhaps the name of function to test?). You need to pass in the actual function instead. For example do labtest({function}) instead of labtest(\"{function}\")"
 
@@ -74,11 +85,8 @@ def labtest_main(module, function):
 
 	function_name = function.__name__
 
-	test_name = function_name + '_test'
+	assert function_name in all_testcases, f"Couldn't find a test suite for function '{function_name}'. Does the name of the function match the description above?"
 	
-	assert test_name in classes_in_module, f"Couldn't find a test suite for function '{function_name}'. Does the name of the function match the description above?"
-	TestClass = classes_in_module[test_name]
+	function_testcases = all_testcases[function_name]
 	
-	suite = unittest.TestSuite()
-	suite.addTest(TestClass(function))
-	unittest.TextTestRunner(verbosity=2).run(suite)
+	run_testcases(function, function_testcases)
