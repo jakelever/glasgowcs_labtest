@@ -39,10 +39,9 @@ def setup_docstring(module, function):
 	Example Usage:
 	
 		def FUNCNAME():
-			# Definitely not the right thing to do
-			return 42
+			return 42 # This function is wrong
 			
-		labtest(FUNCNAME)
+		labtest(FUNCNAME) # This will test the function
 
 	Args:
 		function: The function that you want to test (and not the string).
@@ -52,6 +51,7 @@ def setup_docstring(module, function):
 	available_tests_str = str(available_tests).replace('"','').replace("'","")
 	docstring = docstring.replace('TESTLIST',available_tests_str)
 	docstring = docstring.replace('FUNCNAME',available_tests[0])
+	docstring = docstring.replace('\t','  ')
 	
 	function.__doc__ = docstring
 	
