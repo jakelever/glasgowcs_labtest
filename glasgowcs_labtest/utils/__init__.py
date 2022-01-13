@@ -33,13 +33,12 @@ def setup_docstring(module, function):
 	To run a lab, pass the function directly and not the name as string. For example, to test the FUNCNAME function, run labtest(FUNCNAME) and not labtest("FUNCNAME").
 	
 	Example Usage:
-	    ```
-			def FUNCNAME():
-				# Definitely not the right thing to do
-				return 42
-				
-			labtest(FUNCNAME)
-		```
+	
+		def FUNCNAME():
+			# Definitely not the right thing to do
+			return 42
+			
+		labtest(FUNCNAME)
 
 	Args:
 		function: The function that you want to test (and not the string).
