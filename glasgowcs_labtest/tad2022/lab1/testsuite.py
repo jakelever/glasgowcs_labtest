@@ -15,11 +15,86 @@ class multiply_by_three_test(LabTest):
 class tokenize_strsplit_test(LabTest):
 	def runTest(self):
 		testcases = [
-			{"input":"John's father didn’t have £100.", "output": ["John's", 'father', 'didn’t', 'have', '£100.']},
-			{"input":"Where we're going, we won't need roads.", "output": ['Where', "we're", 'going,', 'we', "won't", 'need', 'roads.']},
-			{"input":"I'm going to make him an offer he can't refuse.", "output": ["I'm", 'going', 'to', 'make', 'him', 'an', 'offer', 'he', "can't", 'refuse.']},
-			{"input":"It's-a Me, Mario!", "output": ["It's-a", 'Me,', 'Mario!']},
-			{"input":"Mess with the best, die like the rest.", "output": ['Mess', 'with', 'the', 'best,', 'die', 'like', 'the', 'rest.']}
+			{"input": "John's father didn't have $100.", "output": ["John's", "father", "didn't", "have", "$100."]},
+			{"input": "Where we're going, we won't need roads.", "output": ["Where", "we're", "going,", "we", "won't", "need", "roads."]},
+			{"input": "I'm going to make him an offer he can't refuse.", "output": ["I'm", "going", "to", "make", "him", "an", "offer", "he", "can't", "refuse."]},
+			{"input": "It's-a Me, Mario!", "output": ["It's-a", "Me,", "Mario!"]},
+			{"input": "Mess with the best, die like the rest.", "output": ["Mess", "with", "the", "best,", "die", "like", "the", "rest."]},
+
+		]
+		
+		self.run_testcases(testcases)
+		
+class tokenize_punctuation_test(LabTest):
+	def runTest(self):
+		testcases = [
+			{"input": "John's father didn't have $100.", "output": ["John", "'", "s", "father", "didn", "'", "t", "have", "$", "100", "."]},
+			{"input": "Where we're going, we won't need roads.", "output": ["Where", "we", "'", "re", "going", ",", "we", "won", "'", "t", "need", "roads", "."]},
+			{"input": "I'm going to make him an offer he can't refuse.", "output": ["I", "'", "m", "going", "to", "make", "him", "an", "offer", "he", "can", "'", "t", "refuse", "."]},
+			{"input": "It's-a Me, Mario!", "output": ["It", "'", "s", "-", "a", "Me", ",", "Mario", "!"]},
+			{"input": "Mess with the best, die like the rest.", "output": ["Mess", "with", "the", "best", ",", "die", "like", "the", "rest", "."]},
+
+		]
+		
+		self.run_testcases(testcases)
+
+class stem_morerules_test(LabTest):
+	def runTest(self):
+		testcases = [
+			{"input": ["We", "are", "going", "fishing", "."], "output": ["We", "are", "go", "fish", "."]},
+			{"input": ["He", "walked", "home", "."], "output": ["He", "walk", "home", "."]},
+			{"input": ["She", "loves", "Irn", "Bru", "."], "output": ["She", "love", "Irn", "Bru", "."]},
+			{"input": ["I", "love", "reading", "books", "."], "output": ["I", "love", "read", "book", "."]},
+			{"input": ["David", "runs", "every", "day", "."], "output": ["David", "run", "every", "day", "."]},
+		]
+		
+		self.run_testcases(testcases)
+		
+		
+class lowercase_tokens_test(LabTest):
+	def runTest(self):
+		testcases = [
+			{"input": ["We", "are", "go", "fish", "."], "output": ["we", "are", "go", "fish", "."]},
+			{"input": ["He", "walk", "home", "."], "output": ["he", "walk", "home", "."]},
+			{"input": ["She", "love", "Irn", "Bru", "."], "output": ["she", "love", "irn", "bru", "."]},
+			{"input": ["I", "love", "read", "book", "."], "output": ["i", "love", "read", "book", "."]},
+			{"input": ["David", "run", "every", "day", "."], "output": ["david", "run", "every", "day", "."]},
+		]
+		
+		self.run_testcases(testcases)
+		
+class remove_stopwords_test(LabTest):
+	def runTest(self):
+		testcases = [
+			{"input": ["we", "are", "go", "fish", "."], "output": ["go", "fish", "."]},
+			{"input": ["he", "walk", "home", "."], "output": ["walk", "home", "."]},
+			{"input": ["she", "love", "irn", "bru", "."], "output": ["love", "irn", "bru", "."]},
+			{"input": ["i", "love", "read", "book", "."], "output": ["love", "read", "book", "."]},
+			{"input": ["david", "run", "every", "day", "."], "output": ["david", "run", "day", "."]},
+		]
+		
+		self.run_testcases(testcases)
+		
+class tokenize_spacy_test(LabTest):
+	def runTest(self):
+		testcases = [
+			{"input": "John's father didn't have $100.", "output": ["John", "'s", "father", "did", "n't", "have", "$", "100", "."]},
+			{"input": "Where we're going, we won't need roads.", "output": ["Where", "we", "'re", "going", ",", "we", "wo", "n't", "need", "roads", "."]},
+			{"input": "I'm going to make him an offer he can't refuse.", "output": ["I", "'m", "going", "to", "make", "him", "an", "offer", "he", "ca", "n't", "refuse", "."]},
+			{"input": "It's-a Me, Mario!", "output": ["It's", "-", "a", "Me", ",", "Mario", "!"]},
+			{"input": "Mess with the best, die like the rest.", "output": ["Mess", "with", "the", "best", ",", "die", "like", "the", "rest", "."]},
+		]
+		
+		self.run_testcases(testcases)
+		
+class text_pipeline_spacy_test(LabTest):
+	def runTest(self):
+		testcases = [
+			{"input": "John's father didn't have $100.", "output": ["john", "father", "$", "100"]},
+			{"input": "Where we're going, we won't need roads.", "output": ["go", "wo", "need", "road"]},
+			{"input": "I'm going to make him an offer he can't refuse.", "output": ["go", "offer", "refuse"]},
+			{"input": "It's-a Me, Mario!", "output": ["it'", "mario"]},
+			{"input": "Mess with the best, die like the rest.", "output": ["mess", "good", "die", "like", "rest"]},
 		]
 		
 		self.run_testcases(testcases)
