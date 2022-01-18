@@ -31,7 +31,10 @@ def run_testcases(function, testcases):
 	print(footer)
 	print("-"*len(header))
 
-def validate_testcases(all_testcases):
+def validate_testcases(testcase_generation_function):
+	assert callable(testcase_generation_function), "The labtest method is malfunctioning as it is not correctly passing in the test suite for this lab"
+
+	all_testcases = testcase_generation_function()
 	assert isinstance(all_testcases, dict), "The labtest method is malfunctioning as it is not correctly passing in the test suite for this lab"
 	
 	assert len(all_testcases) > 0, "The test suite for this lab contains no testcases"
@@ -45,8 +48,9 @@ def validate_testcases(all_testcases):
 			assert "output" in testcase, "The testcases for this lab are malformed"
 			assert isinstance(testcase["input"],tuple), "The testcases for this lab are malformed"
 	
-def setup_docstring(labtest_function, all_testcases):
-	validate_testcases(all_testcases)
+def setup_docstring(labtest_function, testcase_generation_function):
+	validate_testcases(testcase_generation_function)
+	all_testcases = testcase_generation_function()
 
 	assert callable(labtest_function) and labtest_function.__name__ == 'labtest', "The test suite setup is malfunctioning as it is not correctly passing in the labtest function for this lab"
 		
@@ -76,8 +80,9 @@ def setup_docstring(labtest_function, all_testcases):
 	
 	labtest_function.__doc__ = docstring
 
-def labtest_main(function,all_testcases):
-	validate_testcases(all_testcases)
+def labtest_main(function,testcase_generation_function):
+	validate_testcases(testcase_generation_function)
+	all_testcases = testcase_generation_function()
 	
 	assert not isinstance(function, str), "You've passed in a string to labtest (perhaps the name of function to test?). You need to pass in the actual function instead. For example do labtest({function}) instead of labtest(\"{function}\")"
 

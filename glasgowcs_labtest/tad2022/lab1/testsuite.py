@@ -1,5 +1,6 @@
 
-testcases = {
+def make_tests():
+	return {
 
 "multiply_by_three": [
 	{'input': (1,), 'output': 3},
