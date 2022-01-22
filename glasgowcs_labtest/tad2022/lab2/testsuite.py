@@ -1,3 +1,4 @@
+import copy
 
 def run_make_vocabulary_test(make_vocabulary):
 	input_testcases = [
@@ -17,25 +18,27 @@ def run_make_vocabulary_test(make_vocabulary):
 		
 		print(f"Input: {str(input_testcase)}. Running... ",)
 		
-		unique_tokens = set(sum(input_testcase, []))
+		unique_tokens = sorted(set(sum(input_testcase, [])))
 		N = len(unique_tokens)
 		
 		usecase_txt = "make_vocabulary({input_testcase})"
 		
+		original_testcase = copy.deepcopy(input_testcase)
 		vocab = make_vocabulary(input_testcase)
 		
-		assert isinstance(vocab, dict), f"make_vocabulary MUST return a dictionary. Got a {type(vocab)}"
-		assert len(vocab) == len(unique_tokens), f"Returned dictionary should have the length of the number of unique tokens. Got {len(vocab)}. Expected {len(unique_tokens)}."
-		assert sorted(vocab.keys()) == sorted(unique_tokens), f"Returned dictionary keys should match the unique tokens (order doesn't matter). Got {sorted(vocab.keys())}. Expected {sorted(unique_tokens)}."
-		assert sorted(vocab.values()) == list(range(0,N)), f"Returned dictionary values should start from 0 and go up to the number of tokens minus 1. Which token is given which number does not matter. Got {sorted(vocab.values())}. Expected {list(range(0,N))}."
+		assert original_testcase == input_testcase, f"ERROR: The input data to the function has been changed inside the make_vocabulary function.\n\nThe original input data: {original_testcase}.\n\nThe input data after the function is called: {input_testcase}.\n\nSee https://bit.ly/glasgowcs_objinput_explainer for more information."
+		assert isinstance(vocab, dict), f"ERROR: make_vocabulary MUST return a dictionary. Got a {type(vocab)}"
+		assert all( isinstance(k,str) for k in vocab.keys() ), f"ERROR: Returned dictionary keys should all be text values. Got {vocab.keys()}." 
+		assert all( isinstance(v,int) for v in vocab.values() ), f"ERROR: Returned dictionary values should all be text values. Got {vocab.values()}." 
+		assert sorted(vocab.keys()) == sorted(unique_tokens), f"ERROR: Returned dictionary keys should match the unique tokens (order doesn't matter). Got {sorted(vocab.keys())}. Expected {sorted(unique_tokens)}."
+		assert sorted(vocab.values()) == list(range(0,N)), f"ERROR: Returned dictionary values should start from 0 and go up to the number of tokens minus 1. Which token is given which number does not matter. Got {sorted(vocab.values())}. Expected {list(range(0,N))}."
 	
 	footer = f"{len(input_testcases)} testcases PASSED"
 
 	print("-"*len(header))
 	print(footer)
 	print("-"*len(header))
-
-
+	
 
 def make_tests():
 	return {
@@ -91,6 +94,35 @@ def make_tests():
 	{"input": (["bru", "good", "glasgow"], {"coffee": 0, "good": 1, "kelvin": 2, "bru": 3, "glasgow": 4}, {"good": 5, "glasgow": 6, "bru": 5, "kelvin": 5, "coffee": 4}, 10), "output": {3: 0.6931471805599453, 1: 0.6931471805599453, 4: 0.5108256237659907}},
 	{"input": (["coffee", "bru", "bru", "irn"], {"irn": 0, "city": 1, "bru": 2, "coffee": 3}, {"irn": 2, "coffee": 4, "bru": 5, "city": 3}, 6), "output": {3: 0.4054651081081644, 2: 0.3086972298409842, 0: 1.0986122886681098}},
 ],
+
+
+"sparse_eucledean_distance": [
+	{"input": ({2: 1}, {0: 3}), "output": 3.1622776601683795},
+	{"input": ({1: 2, 0: 1}, {0: 4, 2: 1}), "output": 3.7416573867739413},
+	{"input": ({0: 2, 4: 2}, {4: 5, 0: 2}), "output": 3.0},
+	{"input": ({5: 2, 4: 4, 3: 5}, {2: 4, 0: 3, 1: 3}), "output": 8.888194417315589},
+	{"input": ({1: 1, 6: 1, 2: 4}, {0: 5, 2: 3, 5: 1}), "output": 5.385164807134504},
+],
+
+
+"normalize_sparse_vector": [
+	{"input": ({0: 3, 3: 2},), "output": {0: 0.8320502943378437, 3: 0.5547001962252291}},
+	{"input": ({0: 5, 4: 4},), "output": {0: 0.7808688094430304, 4: 0.6246950475544243}},
+	{"input": ({1: 5, 4: 2, 0: 5},), "output": {1: 0.6804138174397717, 4: 0.2721655269759087, 0: 0.6804138174397717}},
+	{"input": ({2: 4, 0: 3, 1: 3},), "output": {2: 0.6859943405700353, 0: 0.5144957554275265, 1: 0.5144957554275265}},
+	{"input": ({1: 3, 2: 1, 6: 4, 4: 5},), "output": {1: 0.42008402520840293, 2: 0.14002800840280097, 6: 0.5601120336112039, 4: 0.7001400420140048}},
+],
+
+"sparse_dot_prod": [
+	{"input": ({0: 0.8320502943378437, 3: 0.5547001962252291}, {0: 1.0}), "output": 0.8320502943378437},
+	{"input": ({0: 0.7808688094430304, 4: 0.6246950475544243}, {0: 0.4472135954999579, 3: 0.8944271909999159}), "output": 0.34921514788478913},
+	{"input": ({1: 0.6804138174397717, 4: 0.2721655269759087, 0: 0.6804138174397717}, {3: 0.6246950475544243, 1: 0.7808688094430304}), "output": 0.531313927552782},
+	{"input": ({2: 0.6859943405700353, 0: 0.5144957554275265, 1: 0.5144957554275265}, {1: 0.23570226039551587, 5: 0.23570226039551587, 2: 0.9428090415820635}), "output": 0.768029479281721},
+	{"input": ({1: 0.42008402520840293, 2: 0.14002800840280097, 6: 0.5601120336112039, 4: 0.7001400420140048}, {0: 0.6509445549041194, 3: 0.39056673294247163, 6: 0.6509445549041194}), "output": 0.36460187841548625},
+
+],
+
+
 
 "tfidf_vectorize_with_sklearn": [
 	{"input": (["Glasgow smiles better", "He smiles a lot"],), "output": [[0.6316672017376245, 0.6316672017376245, 0.0, 0.0, 0.4494364165239821], [0.0, 0.0, 0.6316672017376245, 0.6316672017376245, 0.4494364165239821]]},
