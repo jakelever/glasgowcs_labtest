@@ -1,5 +1,6 @@
 from . import testsuite
 
+import copy
 import numpy as np
 from scipy.sparse.csr import csr_matrix
 
@@ -15,12 +16,15 @@ def run_testcases(function, testcases):
 		
 		print(f"Input: {str(testcase['input'])}. Running... ",)
 		
+		original_testcase = copy.deepcopy(testcase['input'])
+		input_txt = str(testcase['input'])[1:-1].rstrip(',') # Strip off the brackets and potential right comma for nice output
+		
 		# Run the function and get the output
 		output = function(*testcase['input'])
 		
-		input_txt = str(testcase['input'])[1:-1].rstrip(',') # Strip off the brackets and potential right comma for nice output
 		error_msg = f"\n\nERROR: Expected the output of {function.__name__}({input_txt}) to be {testcase['output']}. Got {output}."
 		
+		assert original_testcase == testcase['input'], f"ERROR: The input data to the function has been changed during execution.\n\nFunction call: {function.__name__}({input_txt}).\n\nThe original input data: {original_testcase}.\n\nThe input data after the function is called: {testcase['input']}.\n\nSee https://bit.ly/glasgowcs_objinput_explainer for more information."
 		assert output == testcase['output'], error_msg
 		
 		print("OK.")
@@ -43,14 +47,17 @@ def run_scipy_sparse_testcases(function, testcases):
 		
 		print(f"Input: {str(testcase['input'])}. Running... ",)
 		
+		original_testcase = copy.deepcopy(testcase['input'])
+		input_txt = str(testcase['input'])[1:-1].rstrip(',') # Strip off the brackets and potential right comma for nice output
+		
 		result = function(*testcase['input'])
 
 		expected_matrix = np.array(testcase['output'])
 
 		func_name = function.__name__
 
-		input_txt = str(testcase['input'])[1:-1].rstrip(',') # Strip off the brackets and potential right comma for nice output
 		
+		assert original_testcase == testcase['input'], f"ERROR: The input data to the function has been changed during execution.\n\nFunction call: {function.__name__}({input_txt}).\n\nThe original input data: {original_testcase}.\n\nThe input data after the function is called: {testcase['input']}.\n\nSee https://bit.ly/glasgowcs_objinput_explainer for more information."
 		assert isinstance(result, csr_matrix), f"\n\nERROR: Problem with run of the output of {function.__name__}({input_txt}).\n\n{func_name} is not returning the right type of data. It should be a csr_matrix which is the output of fit_transform function of a TfidfVectorizer. Instead it returned: {type(result)}"
 		assert expected_matrix.shape == result.shape, f"\n\nERROR: Problem with run of the output of {function.__name__}({input_txt}).\n\nThe output matrix shape does not match the expected {expected_matrix.shape}. Got {result.shape}"
 		#assert 
