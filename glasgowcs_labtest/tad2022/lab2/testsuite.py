@@ -62,6 +62,14 @@ def make_tests():
 
 ],
 
+"sparse_to_dense": [
+	{"input":({2: 1, 1: 4}, 4), "output":[0, 4, 1, 0]},
+	{"input":({4: 2}, 5), "output":[0, 0, 0, 0, 2]},
+	{"input":({0: 1, 1: 2, 4: 4}, 7), "output":[1, 2, 0, 0, 4, 0, 0]},
+	{"input":({1: 9, 3: 9}, 4), "output":[0, 9, 0, 9]},
+	{"input":({4: 8, 0: 5}, 5), "output":[5, 0, 0, 0, 8]},
+],
+
 "make_onehot_sparse": [
 	{"input": (["bad", "irn", "glasgow", "glasgow", "bad", "bad"], {"bru": 0, "irn": 1, "glasgow": 2, "bad": 3, "coffee": 4, "kelvin": 5}), "output": {3: 1, 2: 1, 1: 1}},
 	{"input": (["kelvin", "kelvin", "irn", "irn"], {"coffee": 0, "shop": 1, "irn": 2, "kelvin": 3}), "output": {2: 1, 3: 1}},
@@ -88,11 +96,11 @@ def make_tests():
 ],
 
 "make_tfidf_sparse": [
-	{"input": (["irn", "kelvin"], {"bru": 0, "irn": 1, "glasgow": 2, "bad": 3, "coffee": 4, "kelvin": 5}, {"kelvin": 4, "irn": 5, "bad": 5, "glasgow": 6, "bru": 4, "coffee": 3}, 10), "output": {1: 0.6931471805599453, 5: 0.9162907318741551}},
-	{"input": (["bad", "bru", "glasgow", "glasgow"], {"bru": 0, "bad": 1, "kelvin": 2, "culture": 3, "glasgow": 4}, {"bad": 3, "glasgow": 4, "bru": 5, "kelvin": 5, "culture": 3}, 8), "output": {1: 0.9808292530117262, 0: 0.47000362924573563, 4: 1.1736001944781467}},
-	{"input": (["kelvin", "city", "city"], {"kelvin": 0, "shop": 1, "culture": 2, "python": 3, "city": 4}, {"kelvin": 2, "city": 4, "culture": 2, "python": 2, "shop": 1}, 6), "output": {0: 1.0986122886681098, 4: 0.686512104608772}},
-	{"input": (["bru", "good", "glasgow"], {"coffee": 0, "good": 1, "kelvin": 2, "bru": 3, "glasgow": 4}, {"good": 5, "glasgow": 6, "bru": 5, "kelvin": 5, "coffee": 4}, 10), "output": {3: 0.6931471805599453, 1: 0.6931471805599453, 4: 0.5108256237659907}},
-	{"input": (["coffee", "bru", "bru", "irn"], {"irn": 0, "city": 1, "bru": 2, "coffee": 3}, {"irn": 2, "coffee": 4, "bru": 5, "city": 3}, 6), "output": {3: 0.4054651081081644, 2: 0.3086972298409842, 0: 1.0986122886681098}},
+	{"input": (["irn", "kelvin"], {"bru": 0, "irn": 1, "glasgow": 2, "bad": 3, "coffee": 4, "kelvin": 5}, {"kelvin": 4, "irn": 5, "bad": 5, "glasgow": 6, "bru": 4, "coffee": 3}, 10), "output":{1: 0.3010299956639812, 5: 0.3979400086720376}},
+	{"input": (["bad", "bru", "glasgow", "glasgow"], {"bru": 0, "bad": 1, "kelvin": 2, "culture": 3, "glasgow": 4}, {"bad": 3, "glasgow": 4, "bru": 5, "kelvin": 5, "culture": 3}, 8), "output": {1: 0.4259687322722811, 0: 0.20411998265592482, 4: 0.39164905395343774}},
+	{"input": (["kelvin", "city", "city"], {"kelvin": 0, "shop": 1, "culture": 2, "python": 3, "city": 4}, {"kelvin": 2, "city": 4, "culture": 2, "python": 2, "shop": 1}, 6), "output": {0: 0.47712125471966244, 4: 0.22910001000567795}},
+	{"input": (["bru", "good", "glasgow"], {"coffee": 0, "good": 1, "kelvin": 2, "bru": 3, "glasgow": 4}, {"good": 5, "glasgow": 6, "bru": 5, "kelvin": 5, "coffee": 4}, 10), "output": {3: 0.3010299956639812, 1: 0.3010299956639812, 4: 0.22184874961635637}},
+	{"input": (["coffee", "bru", "bru", "irn"], {"irn": 0, "city": 1, "bru": 2, "coffee": 3}, {"irn": 2, "coffee": 4, "bru": 5, "city": 3}, 6), "output": {3: 0.17609125905568124, 2: 0.10301717620200995, 0: 0.47712125471966244}},
 ],
 
 
