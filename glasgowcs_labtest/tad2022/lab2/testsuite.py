@@ -1,6 +1,6 @@
 import copy
 
-def run_make_vocabulary_test(make_vocabulary):
+def run_make_vocabulary_test(make_vocabulary,with_unk):
 	input_testcases = [
 		[ ['irn','bru','good'], ['irn','bru','bad'] ],
 		[ ['go','fish','today'], ['went','fish','yesterday'] ],
@@ -19,6 +19,9 @@ def run_make_vocabulary_test(make_vocabulary):
 		print(f"Input: {str(input_testcase)}. Running... ",)
 		
 		unique_tokens = sorted(set(sum(input_testcase, [])))
+		if with_unk:
+			unique_tokens.append('<UNK>')
+		
 		N = len(unique_tokens)
 		
 		usecase_txt = "make_vocabulary({input_testcase})"
@@ -43,7 +46,7 @@ def run_make_vocabulary_test(make_vocabulary):
 def make_tests():
 	return {
 	
-"make_vocabulary": run_make_vocabulary_test,
+"make_vocabulary": lambda(func) : run_make_vocabulary_test(func,with_unk=False),
 
 "multiply_by_three": [
 	{'input': (1,), 'output': 3},
@@ -103,6 +106,23 @@ def make_tests():
 	{"input": (["coffee", "bru", "bru", "irn"], {"irn": 0, "city": 1, "bru": 2, "coffee": 3}, {"irn": 2, "coffee": 4, "bru": 5, "city": 3}, 6), "output": {3: 0.17609125905568124, 2: 0.10301717620200995, 0: 0.47712125471966244}},
 ],
 
+"make_onehot_ignorenewtokens": [
+	{"input": (["bad", "irn", "glasgow", "edinburgh", "glasgow", "bad", "bad"], {"bru": 0, "irn": 1, "glasgow": 2, "bad": 3, "coffee": 4, "kelvin": 5}), "output": {3: 1, 2: 1, 1: 1}},
+	{"input": (["thames", "kelvin", "kelvin", "irn", "clyde", "irn"], {"coffee": 0, "shop": 1, "irn": 2, "kelvin": 3}), "output": {2: 1, 3: 1}},
+	{"input": (["culture", "good", "city", "culture", "books"], {"irn": 0, "good": 1, "culture": 2, "city": 3, "glasgow": 4}), "output": {3: 1, 2: 1, 1: 1}},
+	{"input": (["city", "university", "edinburgh", "city", "glasgow", "shop", "university", "library"], {"city": 0, "shop": 1, "glasgow": 2, "irn": 3, "university": 4}), "output": {0: 1, 2: 1, 1: 1, 4: 1}},
+	{"input": (["shop", "shop", "shop", "bru", "irn", "vimto"], {"shop": 0, "bad": 1, "bru": 2, "irn": 3, "python": 4}), "output": {2: 1, 3: 1, 0: 1}},
+],
+
+"make_vocabulary_with_unk": lambda(func) : run_make_vocabulary_test(func,with_unk=True),
+
+"make_onehot_unk": [
+	{"input": (["bad", "irn", "glasgow", "edinburgh", "glasgow", "bad", "bad"], {"bru": 0, "irn": 1, "glasgow": 2, "bad": 3, "coffee": 4, "kelvin": 5, "<UNK>": 6}), "output": {3: 1, 2: 1, 1: 1, 6: 1}},
+	{"input": (["thames", "kelvin", "kelvin", "irn", "clyde", "irn"], {"coffee": 0, "shop": 1, "irn": 2, "kelvin": 3, "<UNK>": 4}), "output": {2: 1, 3: 1, 4: 1}},
+	{"input": (["culture", "good", "city", "culture", "books"], {"irn": 0, "good": 1, "culture": 2, "city": 3, "glasgow": 4, "<UNK>": 5}), "output": {3: 1, 2: 1, 1: 1, 5: 1}},
+	{"input": (["city", "university", "edinburgh", "city", "glasgow", "shop", "university", "library"], {"city": 0, "shop": 1, "glasgow": 2, "irn": 3, "university": 4, "<UNK>": 5}), "output": {0: 1, 2: 1, 1: 1, 4: 1, 5: 1}},
+	{"input": (["shop", "shop", "shop", "bru", "irn"], {"shop": 0, "bad": 1, "bru": 2, "irn": 3, "python": 4}), "output": {2: 1, 3: 1, 0: 1}},
+],
 
 "sparse_eucledean_distance": [
 	{"input": ({2: 1}, {0: 3}), "output": 3.1622776601683795},
