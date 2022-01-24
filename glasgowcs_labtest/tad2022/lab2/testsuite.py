@@ -1,6 +1,6 @@
 import copy
 
-def run_make_vocabulary_test(make_vocabulary):
+def run_make_vocabulary_test(make_vocabulary,with_unk):
 	input_testcases = [
 		[ ['irn','bru','good'], ['irn','bru','bad'] ],
 		[ ['go','fish','today'], ['went','fish','yesterday'] ],
@@ -19,6 +19,9 @@ def run_make_vocabulary_test(make_vocabulary):
 		print(f"Input: {str(input_testcase)}. Running... ",)
 		
 		unique_tokens = sorted(set(sum(input_testcase, [])))
+		if with_unk:
+			unique_tokens.append('<UNK>')
+		
 		N = len(unique_tokens)
 		
 		usecase_txt = "make_vocabulary({input_testcase})"
@@ -30,7 +33,11 @@ def run_make_vocabulary_test(make_vocabulary):
 		assert isinstance(vocab, dict), f"ERROR: make_vocabulary MUST return a dictionary. Got a {type(vocab)}"
 		assert all( isinstance(k,str) for k in vocab.keys() ), f"ERROR: Returned dictionary keys should all be text values. Got {vocab.keys()}." 
 		assert all( isinstance(v,int) for v in vocab.values() ), f"ERROR: Returned dictionary values should all be text values. Got {vocab.values()}." 
-		assert sorted(vocab.keys()) == sorted(unique_tokens), f"ERROR: Returned dictionary keys should match the unique tokens (order doesn't matter). Got {sorted(vocab.keys())}. Expected {sorted(unique_tokens)}."
+		
+		if with_unk:
+			assert sorted(vocab.keys()) == sorted(unique_tokens), f"ERROR: Returned dictionary keys should match the unique tokens plus <UNK> (order doesn't matter). Got {sorted(vocab.keys())}. Expected {sorted(unique_tokens)}."
+		else:
+			assert sorted(vocab.keys()) == sorted(unique_tokens), f"ERROR: Returned dictionary keys should match the unique tokens (order doesn't matter). Got {sorted(vocab.keys())}. Expected {sorted(unique_tokens)}."
 		assert sorted(vocab.values()) == list(range(0,N)), f"ERROR: Returned dictionary values should start from 0 and go up to the number of tokens minus 1. Which token is given which number does not matter. Got {sorted(vocab.values())}. Expected {list(range(0,N))}."
 	
 	footer = f"{len(input_testcases)} testcases PASSED"
@@ -43,7 +50,7 @@ def run_make_vocabulary_test(make_vocabulary):
 def make_tests():
 	return {
 	
-"make_vocabulary": run_make_vocabulary_test,
+"make_vocabulary": lambda func : run_make_vocabulary_test(func,with_unk=False),
 
 "multiply_by_three": [
 	{'input': (1,), 'output': 3},
@@ -60,6 +67,14 @@ def make_tests():
 	{"input": (["university", "shop", "coffee", "shop"], {"glasgow": 0, "text": 1, "coffee": 2, "shop": 3, "irn": 4, "university": 5}), "output": [0, 0, 1, 1, 0, 1]},
 	{"input": (["culture", "city", "culture", "good", "shop"], {"city": 0, "good": 1, "culture": 2, "shop": 3}), "output": [1, 1, 1, 1]},
 
+],
+
+"sparse_to_dense": [
+	{"input":({2: 1, 1: 4}, 4), "output":[0, 4, 1, 0]},
+	{"input":({4: 2}, 5), "output":[0, 0, 0, 0, 2]},
+	{"input":({0: 1, 1: 2, 4: 4}, 7), "output":[1, 2, 0, 0, 4, 0, 0]},
+	{"input":({1: 9, 3: 9}, 4), "output":[0, 9, 0, 9]},
+	{"input":({4: 8, 0: 5}, 5), "output":[5, 0, 0, 0, 8]},
 ],
 
 "make_onehot_sparse": [
@@ -88,13 +103,30 @@ def make_tests():
 ],
 
 "make_tfidf_sparse": [
-	{"input": (["irn", "kelvin"], {"bru": 0, "irn": 1, "glasgow": 2, "bad": 3, "coffee": 4, "kelvin": 5}, {"kelvin": 4, "irn": 5, "bad": 5, "glasgow": 6, "bru": 4, "coffee": 3}, 10), "output": {1: 0.6931471805599453, 5: 0.9162907318741551}},
-	{"input": (["bad", "bru", "glasgow", "glasgow"], {"bru": 0, "bad": 1, "kelvin": 2, "culture": 3, "glasgow": 4}, {"bad": 3, "glasgow": 4, "bru": 5, "kelvin": 5, "culture": 3}, 8), "output": {1: 0.9808292530117262, 0: 0.47000362924573563, 4: 1.1736001944781467}},
-	{"input": (["kelvin", "city", "city"], {"kelvin": 0, "shop": 1, "culture": 2, "python": 3, "city": 4}, {"kelvin": 2, "city": 4, "culture": 2, "python": 2, "shop": 1}, 6), "output": {0: 1.0986122886681098, 4: 0.686512104608772}},
-	{"input": (["bru", "good", "glasgow"], {"coffee": 0, "good": 1, "kelvin": 2, "bru": 3, "glasgow": 4}, {"good": 5, "glasgow": 6, "bru": 5, "kelvin": 5, "coffee": 4}, 10), "output": {3: 0.6931471805599453, 1: 0.6931471805599453, 4: 0.5108256237659907}},
-	{"input": (["coffee", "bru", "bru", "irn"], {"irn": 0, "city": 1, "bru": 2, "coffee": 3}, {"irn": 2, "coffee": 4, "bru": 5, "city": 3}, 6), "output": {3: 0.4054651081081644, 2: 0.3086972298409842, 0: 1.0986122886681098}},
+	{"input": (["irn", "kelvin"], {"bru": 0, "irn": 1, "glasgow": 2, "bad": 3, "coffee": 4, "kelvin": 5}, {"kelvin": 4, "irn": 5, "bad": 5, "glasgow": 6, "bru": 4, "coffee": 3}, 10), "output":{1: 0.3010299956639812, 5: 0.3979400086720376}},
+	{"input": (["bad", "bru", "glasgow", "glasgow"], {"bru": 0, "bad": 1, "kelvin": 2, "culture": 3, "glasgow": 4}, {"bad": 3, "glasgow": 4, "bru": 5, "kelvin": 5, "culture": 3}, 8), "output": {1: 0.4259687322722811, 0: 0.20411998265592482, 4: 0.39164905395343774}},
+	{"input": (["kelvin", "city", "city"], {"kelvin": 0, "shop": 1, "culture": 2, "python": 3, "city": 4}, {"kelvin": 2, "city": 4, "culture": 2, "python": 2, "shop": 1}, 6), "output": {0: 0.47712125471966244, 4: 0.22910001000567795}},
+	{"input": (["bru", "good", "glasgow"], {"coffee": 0, "good": 1, "kelvin": 2, "bru": 3, "glasgow": 4}, {"good": 5, "glasgow": 6, "bru": 5, "kelvin": 5, "coffee": 4}, 10), "output": {3: 0.3010299956639812, 1: 0.3010299956639812, 4: 0.22184874961635637}},
+	{"input": (["coffee", "bru", "bru", "irn"], {"irn": 0, "city": 1, "bru": 2, "coffee": 3}, {"irn": 2, "coffee": 4, "bru": 5, "city": 3}, 6), "output": {3: 0.17609125905568124, 2: 0.10301717620200995, 0: 0.47712125471966244}},
 ],
 
+"make_onehot_ignorenewtokens": [
+	{"input": (["bad", "irn", "glasgow", "edinburgh", "glasgow", "bad", "bad"], {"bru": 0, "irn": 1, "glasgow": 2, "bad": 3, "coffee": 4, "kelvin": 5}), "output": {3: 1, 2: 1, 1: 1}},
+	{"input": (["thames", "kelvin", "kelvin", "irn", "clyde", "irn"], {"coffee": 0, "shop": 1, "irn": 2, "kelvin": 3}), "output": {2: 1, 3: 1}},
+	{"input": (["culture", "good", "city", "culture", "books"], {"irn": 0, "good": 1, "culture": 2, "city": 3, "glasgow": 4}), "output": {3: 1, 2: 1, 1: 1}},
+	{"input": (["city", "university", "edinburgh", "city", "glasgow", "shop", "university", "library"], {"city": 0, "shop": 1, "glasgow": 2, "irn": 3, "university": 4}), "output": {0: 1, 2: 1, 1: 1, 4: 1}},
+	{"input": (["shop", "shop", "shop", "bru", "irn", "vimto"], {"shop": 0, "bad": 1, "bru": 2, "irn": 3, "python": 4}), "output": {2: 1, 3: 1, 0: 1}},
+],
+
+"make_vocabulary_with_unk": lambda func : run_make_vocabulary_test(func,with_unk=True),
+
+"make_onehot_unk": [
+	{"input": (["bad", "irn", "glasgow", "edinburgh", "glasgow", "bad", "bad"], {"bru": 0, "irn": 1, "glasgow": 2, "bad": 3, "coffee": 4, "kelvin": 5, "<UNK>": 6}), "output": {3: 1, 2: 1, 1: 1, 6: 1}},
+	{"input": (["thames", "kelvin", "kelvin", "irn", "clyde", "irn"], {"coffee": 0, "shop": 1, "irn": 2, "kelvin": 3, "<UNK>": 4}), "output": {2: 1, 3: 1, 4: 1}},
+	{"input": (["culture", "good", "city", "culture", "books"], {"irn": 0, "good": 1, "culture": 2, "city": 3, "glasgow": 4, "<UNK>": 5}), "output": {3: 1, 2: 1, 1: 1, 5: 1}},
+	{"input": (["city", "university", "edinburgh", "city", "glasgow", "shop", "university", "library"], {"city": 0, "shop": 1, "glasgow": 2, "irn": 3, "university": 4, "<UNK>": 5}), "output": {0: 1, 2: 1, 1: 1, 4: 1, 5: 1}},
+	{"input": (["shop", "shop", "shop", "bru", "irn"], {"shop": 0, "bad": 1, "bru": 2, "irn": 3, "python": 4}), "output": {2: 1, 3: 1, 0: 1}},
+],
 
 "sparse_eucledean_distance": [
 	{"input": ({2: 1}, {0: 3}), "output": 3.1622776601683795},
