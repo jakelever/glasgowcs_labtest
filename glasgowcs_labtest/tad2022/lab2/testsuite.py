@@ -33,7 +33,11 @@ def run_make_vocabulary_test(make_vocabulary,with_unk):
 		assert isinstance(vocab, dict), f"ERROR: make_vocabulary MUST return a dictionary. Got a {type(vocab)}"
 		assert all( isinstance(k,str) for k in vocab.keys() ), f"ERROR: Returned dictionary keys should all be text values. Got {vocab.keys()}." 
 		assert all( isinstance(v,int) for v in vocab.values() ), f"ERROR: Returned dictionary values should all be text values. Got {vocab.values()}." 
-		assert sorted(vocab.keys()) == sorted(unique_tokens), f"ERROR: Returned dictionary keys should match the unique tokens (order doesn't matter). Got {sorted(vocab.keys())}. Expected {sorted(unique_tokens)}."
+		
+		if with_unk:
+			assert sorted(vocab.keys()) == sorted(unique_tokens), f"ERROR: Returned dictionary keys should match the unique tokens plus <UNK> (order doesn't matter). Got {sorted(vocab.keys())}. Expected {sorted(unique_tokens)}."
+		else:
+			assert sorted(vocab.keys()) == sorted(unique_tokens), f"ERROR: Returned dictionary keys should match the unique tokens (order doesn't matter). Got {sorted(vocab.keys())}. Expected {sorted(unique_tokens)}."
 		assert sorted(vocab.values()) == list(range(0,N)), f"ERROR: Returned dictionary values should start from 0 and go up to the number of tokens minus 1. Which token is given which number does not matter. Got {sorted(vocab.values())}. Expected {list(range(0,N))}."
 	
 	footer = f"{len(input_testcases)} testcases PASSED"
@@ -46,7 +50,7 @@ def run_make_vocabulary_test(make_vocabulary,with_unk):
 def make_tests():
 	return {
 	
-"make_vocabulary": lambda(func) : run_make_vocabulary_test(func,with_unk=False),
+"make_vocabulary": lambda func : run_make_vocabulary_test(func,with_unk=False),
 
 "multiply_by_three": [
 	{'input': (1,), 'output': 3},
@@ -114,7 +118,7 @@ def make_tests():
 	{"input": (["shop", "shop", "shop", "bru", "irn", "vimto"], {"shop": 0, "bad": 1, "bru": 2, "irn": 3, "python": 4}), "output": {2: 1, 3: 1, 0: 1}},
 ],
 
-"make_vocabulary_with_unk": lambda(func) : run_make_vocabulary_test(func,with_unk=True),
+"make_vocabulary_with_unk": lambda func : run_make_vocabulary_test(func,with_unk=True),
 
 "make_onehot_unk": [
 	{"input": (["bad", "irn", "glasgow", "edinburgh", "glasgow", "bad", "bad"], {"bru": 0, "irn": 1, "glasgow": 2, "bad": 3, "coffee": 4, "kelvin": 5, "<UNK>": 6}), "output": {3: 1, 2: 1, 1: 1, 6: 1}},
