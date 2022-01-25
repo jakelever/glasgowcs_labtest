@@ -4,6 +4,8 @@ import copy
 import numpy as np
 from scipy.sparse.csr import csr_matrix
 
+from glasgowcs_labtest.utils import round_data, round_sparse_matrix
+
 def run_testcases(function, testcases):
 	header = f"LABTEST: Running {len(testcases)} testcases"
 
@@ -25,6 +27,10 @@ def run_testcases(function, testcases):
 		error_msg = f"\n\nERROR: Expected the output of {function.__name__}({input_txt}) to be {testcase['output']}. Got {output}."
 		
 		assert original_testcase == testcase['input'], f"ERROR: The input data to the function has been changed during execution.\n\nFunction call: {function.__name__}({input_txt}).\n\nThe original input data: {original_testcase}.\n\nThe input data after the function is called: {testcase['input']}.\n\nSee https://bit.ly/glasgowcs_objinput_explainer for more information."
+		
+		output = round_data(output, places=5)
+		testcase['output'] = round_data(testcase['output'], places=5)
+		
 		assert output == testcase['output'], error_msg
 		
 		print("OK.")
@@ -60,7 +66,10 @@ def run_scipy_sparse_testcases(function, testcases):
 		assert original_testcase == testcase['input'], f"ERROR: The input data to the function has been changed during execution.\n\nFunction call: {function.__name__}({input_txt}).\n\nThe original input data: {original_testcase}.\n\nThe input data after the function is called: {testcase['input']}.\n\nSee https://bit.ly/glasgowcs_objinput_explainer for more information."
 		assert isinstance(result, csr_matrix), f"\n\nERROR: Problem with run of the output of {function.__name__}({input_txt}).\n\n{func_name} is not returning the right type of data. It should be a csr_matrix which is the output of fit_transform function of a TfidfVectorizer. Instead it returned: {type(result)}"
 		assert expected_matrix.shape == result.shape, f"\n\nERROR: Problem with run of the output of {function.__name__}({input_txt}).\n\nThe output matrix shape does not match the expected {expected_matrix.shape}. Got {result.shape}"
-		#assert 
+		
+		expected_matrix = round_sparse_matrix(expected_matrix, places=5)
+		result = round_sparse_matrix(result, places=5)
+		
 		assert np.array_equal(expected_matrix, result.todense()), f"\n\nERROR: Problem with run of the output of {function.__name__}({input_txt}).\n\nThe output matrix does not match the expected. \n\nExpected a sparse matrix equivalent to:\n{expected_matrix.tolist()}\n\nGot:\n{result.todense().tolist()}"
 
 		print("OK.")
