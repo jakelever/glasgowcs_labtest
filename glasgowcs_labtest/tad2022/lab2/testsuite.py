@@ -154,7 +154,7 @@ def make_tests():
 
 ],
 
-"cosine_similarity": [
+"sparse_cosine_similarity": [
 	{'input': ({0: 3, 1: 4}, {1: 4, 3: 4}), 'output': 0.565685424949238},
 	{'input': ({3: 5, 1: 5}, {2: 2, 3: 1}), 'output': 0.3162277660168379},
 	{'input': ({3: 1, 2: 3}, {1: 1, 0: 5}), 'output': 0.0},
