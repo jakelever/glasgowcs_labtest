@@ -105,7 +105,7 @@ def setup_docstring(labtest_function):
 
 	assert callable(labtest_function) and labtest_function.__name__ == 'labtest', "The test suite setup is malfunctioning as it is not correctly passing in the labtest function for this lab"
 		
-	docstring = """Runs tests on a specific function in this lab. It will output test status and throw an error if any of the tests fail with information about the provided input and expected output.
+	docstring = """Runs tests on a specific function in this lab. It will output test status and throw an error if any of the tests fail with information about the provided input and expected output. Any floating point values in the output will be rounded to five decimal places before comparison.
 	
 	The functions that can be tested with this labtest are TESTLIST.
 	
