@@ -1,6 +1,7 @@
 
 import copy
 import numpy as np
+from collections import Counter, defaultdict
 
 def round_data(x, places):
 	"""
@@ -8,7 +9,8 @@ def round_data(x, places):
 	floating point values into to the given number of decimal places. It works
 	with nested structures (e.g. list of lists, etc).
 
-	Data structures can contain any of dict, list, float, int or string
+	Data structures can contain any of dict, list, float, int, string
+	Counter or defaultdict.
 
 	Args:
 		x: The data structure to round any floats within
@@ -24,12 +26,19 @@ def round_data(x, places):
 		return {key:round_data(val,places) for key,val in x.items() }
 	elif isinstance(x, list):
 		return [round_data(val,places) for val in x ]
+	elif isinstance(x, set):
+		return set(round_data(val,places) for val in x)
+	elif isinstance(x, Counter) or isinstance(x, defaultdict):
+		copied = copy.copy(x)
+		for k in copied:
+			copied[k] = round_data(copied[k],places)
+		return copied
 	elif isinstance(x, float):
 		return round(x, places)
 	elif isinstance(x, int) or isinstance(x, str):
 		return x
 	else:
-		raise RuntimeError("ERROR: Data structure contains an element that is not a dict, list, float, int or string")
+		raise RuntimeError("ERROR: Data structure contains an element that is not a dict, list, float, int, string, Counter or defaultdict")
 
 def round_sparse_matrix(m, places):
 	"""
