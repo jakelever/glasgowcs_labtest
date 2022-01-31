@@ -37,7 +37,7 @@ def make_tests():
 	{'input': ('coffee', {'spent': 3, 'coffee': 1, 'offer': 1, 'coffees': 2, 'color': 2}), 'output': {'coffee'}},
 	{'input': ('spda', {'pc': 2, 'spin': 1, 'pad': 1}), 'output': {'pad', 'spin'}},
 	{'input': ('brw', {'arm': 1, 'mystery': 2, 'dew': 3, 'filled': 2}), 'output': {'arm', 'dew'}},
-	{'input': ('cofee', {}), 'output': {'cofeee'}},
+	{'input': ('cofee', {}), 'output': {'cofee'}},
 
 ],
 
