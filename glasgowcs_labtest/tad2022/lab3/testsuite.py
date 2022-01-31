@@ -1,4 +1,6 @@
 
+from collections import Counter
+
 def make_tests():
 	return {
 
