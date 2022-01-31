@@ -82,17 +82,25 @@ def make_tests():
 	{'input': ('as', 'hmcin', Counter({'main': 9, 'linked': 8, 'as': 6}), Counter({('as', 'main'): 1, ('linked', 'as'): 1})), 'output': 'main'},
 ],
 
-"blah": [
-
+"trigram_token_prob": [
+	{'input': ('c', 'a', 'a', Counter({('a', 'a'): 5, ('c', 'a'): 3, ('c', 'c'): 3}), Counter({('c', 'a', 'a'): 1, ('c', 'c', 'a'): 1})), 'output': 0.3333333333333333},
+	{'input': ('a', 'c', 'a', Counter({('a', 'a'): 4, ('a', 'c'): 4, ('c', 'a'): 4}), Counter({('a', 'a', 'c'): 1, ('a', 'c', 'a'): 1})), 'output': 0.25},
+	{'input': ('a', 'b', 'c', Counter({('a', 'a'): 5, ('a', 'b'): 4, ('b', 'c'): 4, ('c', 'a'): 4}), Counter({('a', 'b', 'c'): 2, ('c', 'a', 'a'): 2, ('a', 'a', 'b'): 1})), 'output': 0.5},
+	{'input': ('c', 'b', 'b', Counter({('a', 'a'): 5, ('a', 'c'): 4, ('c', 'b'): 4, ('b', 'b'): 3}), Counter({('a', 'c', 'b'): 2, ('c', 'b', 'b'): 2, ('a', 'a', 'c'): 1})), 'output': 0.5},
+	{'input': ('a', 'b', 'b', Counter({('a', 'b'): 5, ('b', 'b'): 3}), Counter({('a', 'b', 'b'): 2})), 'output': 0.4},
 ],
 
 
-"blah": [
-
+"hallucinate_text": [
+	{'input': (['i', 'like'], 3, Counter({'potatoes': 5, 'like': 4, 'i': 3}), Counter({('i', 'like'): 5}), Counter({('i', 'like', 'potatoes'): 5})), 'output': ['i', 'like', 'potatoes']},
 ],
 
-"blah": [
-
+"unigram_token_prob_ksmooth": [
+	{'input': ('cup', {'cup': 2, 'spoon': 2, 'glass': 6, 'fork': 1}, 11, 0.1), 'output': 0.18421052631578946},
+	{'input': ('plate', {'plate': 2, 'cup': 2, 'fork': 5, 'spoon': 5}, 14, 0.1), 'output': 0.14583333333333334},
+	{'input': ('fork', {'bowl': 4, 'fork': 5, 'plate': 3, 'cup': 1}, 13, 0.1), 'output': 0.3805970149253731},
+	{'input': ('cup', {'plate': 2, 'glass': 3, 'fork': 1, 'cup': 1}, 7, 0.1), 'output': 0.14864864864864866},
+	{'input': ('glass', {'glass': 5, 'spoon': 3}, 8, 0.1), 'output': 0.6219512195121951},
 ],
 
 "blah": [
