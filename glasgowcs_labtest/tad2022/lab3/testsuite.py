@@ -37,9 +37,69 @@ def make_tests():
 	{'input': ('brw', {'arm': 1, 'mystery': 2, 'dew': 3, 'filled': 2}), 'output': {'arm', 'dew'}},
 
 ],
+
+
+"unigram_spelling_correct": [
+	{'input': ('tey', {'heavy': 1, 'sun': 3, 'her': 1, 'sea': 2, 'me': 1}, 8), 'output': 'sea'},
+	{'input': ('cofee', {'will': 2, 'codes': 2, 'come': 3, 'typical': 1}, 8), 'output': 'come'},
+	{'input': ('coffee', {'offer': 3, 'coffee': 1, 'coffees': 1, 'spent': 2, 'color': 2}, 9), 'output': 'coffee'},
+	{'input': ('spda', {'spin': 2, 'pad': 1, 'pc': 1}, 4), 'output': 'spin'},
+	{'input': ('brw', {'mystery': 1, 'filled': 2, 'dew': 3, 'arm': 2}, 8), 'output': 'dew'},
+],
+
+
+"count_bigrams": [
+	{'input': (['accidentally', 'halo', 'halo', 'halo'],), 'output': Counter({('halo', 'halo'): 2, ('accidentally', 'halo'): 1})},
+	{'input': (['teavana', 'teavana', 'order'],), 'output': Counter({('teavana', 'teavana'): 1, ('teavana', 'order'): 1})},
+	{'input': (['started', 'enough', 'enough', 'started', 'enough', 'enough'],), 'output': Counter({('started', 'enough'): 2, ('enough', 'enough'): 2, ('enough', 'started'): 1})},
+	{'input': (['hario', 'hario', 'lead'],), 'output': Counter({('hario', 'hario'): 1, ('hario', 'lead'): 1})},
+	{'input': (['similar', 'college', 'similar'],), 'output': Counter({('similar', 'college'): 1, ('college', 'similar'): 1})},
+],
+
+"count_trigrams": [
+	{'input': (['accidentally', 'halo', 'halo', 'halo'],), 'output': Counter({('accidentally', 'halo', 'halo'): 1, ('halo', 'halo', 'halo'): 1})},
+	{'input': (['teavana', 'teavana', 'order'],), 'output': Counter({('teavana', 'teavana', 'order'): 1})},
+	{'input': (['started', 'enough', 'enough', 'started', 'enough', 'enough'],), 'output': Counter({('started', 'enough', 'enough'): 2, ('enough', 'enough', 'started'): 1, ('enough', 'started', 'enough'): 1})},
+	{'input': (['hario', 'hario', 'lead'],), 'output': Counter({('hario', 'hario', 'lead'): 1})},
+	{'input': (['similar', 'college', 'similar'],), 'output': Counter({('similar', 'college', 'similar'): 1})},
+],
+
+"bigram_token_prob": [
+	{'input': ('a', 'b', {'a': 8, 'b': 7}, {('a', 'a'): 2, ('a', 'b'): 2, ('b', 'a'): 4, ('b', 'b'): 3}), 'output': 0.25},
+	{'input': ('b', 'b', {'a': 8, 'b': 9}, {('a', 'a'): 1, ('a', 'b'): 2, ('b', 'a'): 1, ('b', 'b'): 4}), 'output': 0.4444444444444444},
+	{'input': ('a', 'b', {'a': 7, 'b': 6}, {('a', 'a'): 3, ('a', 'b'): 1, ('b', 'a'): 1, ('b', 'b'): 1}), 'output': 0.14285714285714285},
+	{'input': ('a', 'b', {'a': 7, 'b': 6}, {('a', 'a'): 1, ('a', 'b'): 3, ('b', 'a'): 4, ('b', 'b'): 2}), 'output': 0.42857142857142855},
+	{'input': ('a', 'b', {'a': 5, 'b': 5}, {('a', 'a'): 1, ('a', 'b'): 2, ('b', 'a'): 2, ('b', 'b'): 1}), 'output': 0.4},
+],
+
+"bigram_spelling_correct": [
+	{'input': ('i', 'hcacn', Counter({'where': 7, 'i': 6, 'can': 6}), Counter({('i', 'can'): 4, ('where', 'i'): 3})), 'output': 'can'},
+	{'input': ('the', 'owvnyr', Counter({'the': 9, 'and': 8, 'owner': 5}), Counter({('and', 'the'): 2, ('the', 'owner'): 1})), 'output': 'owner'},
+	{'input': ('life', 'gtze', Counter({'life': 7, 'her': 6, 'the': 6}), Counter({('her', 'life'): 3, ('life', 'the'): 1})), 'output': 'the'},
+	{'input': ('it', 's', Counter({'it': 8, "'s": 7, 'says': 5}), Counter({('it', "'s"): 2, ('says', 'it'): 1})), 'output': 'it'},
+	{'input': ('as', 'hmcin', Counter({'main': 9, 'linked': 8, 'as': 6}), Counter({('as', 'main'): 1, ('linked', 'as'): 1})), 'output': 'main'},
+],
+
 "blah": [
 
+],
+
+
+"blah": [
 
 ],
+
+"blah": [
+
+],
+
+"blah": [
+
+],
+
+"blah": [
+
+],
+
 
 }
