@@ -34,7 +34,7 @@ def make_tests():
 "get_candidate_tokens": [
 	{'input': ('tey', {'me': 1, 'sun': 3, 'heavy': 1, 'sea': 2, 'her': 1}), 'output': {'her', 'me', 'sea'}},
 	{'input': ('cofee', {'typical': 2, 'will': 2, 'come': 3, 'codes': 1}), 'output': {'codes', 'come'}},
-	{'input': ('coffee', {'spent': 3, 'coffee': 1, 'offer': 1, 'coffees': 2, 'color': 2}), 'output': ['coffee']},
+	{'input': ('coffee', {'spent': 3, 'coffee': 1, 'offer': 1, 'coffees': 2, 'color': 2}), 'output': {'coffee'}},
 	{'input': ('spda', {'pc': 2, 'spin': 1, 'pad': 1}), 'output': {'pad', 'spin'}},
 	{'input': ('brw', {'arm': 1, 'mystery': 2, 'dew': 3, 'filled': 2}), 'output': {'arm', 'dew'}},
 
