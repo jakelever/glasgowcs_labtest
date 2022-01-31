@@ -20,13 +20,21 @@ def make_tests():
 
 ],
 
-"blah": [
-
+"unigram_sequence_logprob": [
+	{'input': (['glass', 'glass', 'glass', 'cup', 'cup'], {'cup': 2, 'spoon': 2, 'glass': 6, 'fork': 1}, 11), 'output': -7.542270591023018},
+	{'input': (['spoon', 'spoon', 'fork'], {'fork': 1, 'spoon': 5}, 6), 'output': -3.111031312388744},
+	{'input': (['fork', 'fork', 'cup', 'fork'], {'fork': 2, 'glass': 6, 'cup': 4}, 12), 'output': -9.339850002884624},
+	{'input': (['glass', 'cup', 'fork', 'cup', 'cup'], {'cup': 5, 'glass': 3, 'fork': 1}, 9), 'output': -7.2988782218283195},
+	{'input': (['spoon', 'spoon', 'spoon', 'glass'], {'fork': 1, 'glass': 1, 'bowl': 6, 'spoon': 2}, 10), 'output': -10.287712379549449},
 
 ],
 
-"blah": [
-
+"get_candidate_tokens": [
+	{'input': ('tey', {'me': 1, 'sun': 3, 'heavy': 1, 'sea': 2, 'her': 1}), 'output': {'her', 'me', 'sea'}},
+	{'input': ('cofee', {'typical': 2, 'will': 2, 'come': 3, 'codes': 1}), 'output': {'codes', 'come'}},
+	{'input': ('coffee', {'spent': 3, 'coffee': 1, 'offer': 1, 'coffees': 2, 'color': 2}), 'output': ['coffee']},
+	{'input': ('spda', {'pc': 2, 'spin': 1, 'pad': 1}), 'output': {'pad', 'spin'}},
+	{'input': ('brw', {'arm': 1, 'mystery': 2, 'dew': 3, 'filled': 2}), 'output': {'arm', 'dew'}},
 
 ],
 "blah": [
