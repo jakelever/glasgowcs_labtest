@@ -79,7 +79,7 @@ def make_tests():
 	{'input': ('i', 'hcacn', Counter({'where': 7, 'i': 6, 'can': 6}), Counter({('i', 'can'): 4, ('where', 'i'): 3})), 'output': 'can'},
 	{'input': ('the', 'owvnyr', Counter({'the': 9, 'and': 8, 'owner': 5}), Counter({('and', 'the'): 2, ('the', 'owner'): 1})), 'output': 'owner'},
 	{'input': ('life', 'gtze', Counter({'life': 7, 'her': 6, 'the': 6}), Counter({('her', 'life'): 3, ('life', 'the'): 1})), 'output': 'the'},
-	{'input': ('it', 's', Counter({'it': 8, "'s": 7, 'says': 5}), Counter({('it', "'s"): 2, ('says', 'it'): 1})), 'output': 'it'},
+	{'input': ('it', 's', Counter({'it': 8, "is": 7, 'says': 5}), Counter({('it', "is"): 2, ('says', 'it'): 1})), 'output': 'is'},
 	{'input': ('as', 'hmcin', Counter({'main': 9, 'linked': 8, 'as': 6}), Counter({('as', 'main'): 1, ('linked', 'as'): 1})), 'output': 'main'},
 ],
 
@@ -103,14 +103,5 @@ def make_tests():
 	{'input': ('cup', {'plate': 2, 'glass': 3, 'fork': 1, 'cup': 1}, 7, 0.1), 'output': 0.14864864864864866},
 	{'input': ('glass', {'glass': 5, 'spoon': 3}, 8, 0.1), 'output': 0.6219512195121951},
 ],
-
-"blah": [
-
-],
-
-"blah": [
-
-],
-
 
 }
