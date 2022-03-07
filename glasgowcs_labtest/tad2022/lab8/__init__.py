@@ -16,7 +16,7 @@ def run_testcases(function, testcases):
 		output = function(*testcase['input'])
 		
 		input_txt = str(testcase['input'])[1:-1].rstrip(',') # Strip off the brackets and potential right comma for nice output
-		error_msg = f"\n\nERROR: Expected the output of {function.__name__}({input_txt}) to be {testcase['output']}. Got {output}."
+		error_msg = f"\n\nERROR: Expected the output of {function.__name__}({input_txt})\n\nto be {testcase['output']}.\n\nGot {output}."
 		
 		assert output == testcase['output'], error_msg
 		
