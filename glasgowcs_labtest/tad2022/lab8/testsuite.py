@@ -7,7 +7,7 @@ def featurizer_that_return_only_token(sentence, index):
 def make_tests():
 	return {
 
-"train_pos_tagger": [
+"generate_basic_features": [
 	{"input": ({"ner_tags": [0, 7, 0, 0, 0], "pos_tags": [40, 16, 21, 40, 7], "tokens": ["Famous", "Chinese", "panda", "recaptured", "."]}, 0), "output": ["[START]", "famous"]},
 	{"input": ({"ner_tags": [0, 7, 0, 0, 0], "pos_tags": [40, 16, 21, 40, 7], "tokens": ["Famous", "Chinese", "panda", "recaptured", "."]}, 1), "output": ["O", "chinese"]},
 	{"input": ({"ner_tags": [0, 7, 0, 0, 0], "pos_tags": [40, 16, 21, 40, 7], "tokens": ["Famous", "Chinese", "panda", "recaptured", "."]}, 2), "output": ["B-MISC", "panda"]},
@@ -15,7 +15,7 @@ def make_tests():
 	{"input": ({"ner_tags": [0, 7, 0, 0, 0], "pos_tags": [40, 16, 21, 40, 7], "tokens": ["Famous", "Chinese", "panda", "recaptured", "."]}, 4), "output": ["O", "."]},
 ],
 
-"": [
+"generate_features_for_dataset": [
 	{
 		'input': ([{'ner_tags': [0, 7, 0, 0, 0],
 				'pos_tags': [40, 16, 21, 40, 7],
