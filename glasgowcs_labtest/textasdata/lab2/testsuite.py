@@ -128,7 +128,7 @@ def make_tests():
 	{"input": (["shop", "shop", "shop", "bru", "irn"], {"shop": 0, "bad": 1, "bru": 2, "irn": 3, "python": 4}), "output": {2: 1, 3: 1, 0: 1}},
 ],
 
-"sparse_eucledean_distance": [
+"sparse_euclidean_distance": [
 	{"input": ({2: 1}, {0: 3}), "output": 3.1622776601683795},
 	{"input": ({1: 2, 0: 1}, {0: 4, 2: 1}), "output": 3.7416573867739413},
 	{"input": ({0: 2, 4: 2}, {4: 5, 0: 2}), "output": 3.0},
