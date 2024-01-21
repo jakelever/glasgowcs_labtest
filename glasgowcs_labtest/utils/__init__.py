@@ -57,3 +57,24 @@ def round_sparse_matrix(m, places):
 	m_copy = copy.deepcopy(m)
 	m_copy.data = np.round(m_copy.data, 2)
 	return m_copy
+	
+	
+def to_type(x):
+	"""
+	Converts a variable into its type for comparison and works recursively for lists and dictionaries
+	
+	Args:
+		x: A variable of any time
+		
+	Returns:
+	A representation of the type of the variable (either just the type, a list of types, dictionary of types, etc)
+	"""
+	
+	if isinstance(x, list):
+		return [ to_type(j) for j in x ]
+	elif isinstance(x, set):
+		return set( to_type(j) for j in x )
+	elif isinstance(x, dict) or isinstance(x, Counter) or isinstance(x, defaultdict):
+		return { k:to_type(v) for k,v in x.items() }
+	else:
+		return type(x)

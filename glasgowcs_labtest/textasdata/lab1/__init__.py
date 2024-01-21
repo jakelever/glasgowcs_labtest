@@ -1,5 +1,8 @@
 from . import testsuite
 
+import copy
+from glasgowcs_labtest.utils import to_type
+
 def run_testcases(function, testcases):
 	header = f"LABTEST: Running {len(testcases)} testcases"
 
@@ -12,17 +15,32 @@ def run_testcases(function, testcases):
 		
 		print(f"Input: {str(testcase['input'])}. Running... ",)
 		
+		# Copy to input test case to check if it has been changed
+		original_testcase = copy.deepcopy(testcase['input'])
+		
 		# Run the function and get the output
 		output = function(*testcase['input'])
+		output_type = to_type(output)
 		
-		input_txt = str(testcase['input'])[1:-1].rstrip(',') # Strip off the brackets and potential right comma for nice output
-		error_msg = f"\n\nERROR: Expected the output of {function.__name__}({input_txt}) to be {testcase['output']}. Got {output}."
+		# Strip off the brackets and potential right comma for nice output
+		input_txt = str(testcase['input'])[1:-1].rstrip(',')
 		
-		assert output == testcase['output'], error_msg
+		# Get the expected results and types
+		expected_output = testcase['output']
+		expected_output_type = to_type(expected_output)
+				
+		# Prepare possible error messages
+		error_msg_type = f"\n\nERROR: Expected the type of the output of {function.__name__}({input_txt}) to be {expected_output_type}. Got {output_type}."
+		error_msg_content = f"\n\nERROR: Expected the output of {function.__name__}({input_txt}) to be {expected_output}. Got {output}."
+		error_msg_inputchange = f"ERROR: The input data to the function has been changed during execution.\n\nFunction call: {function.__name__}({input_txt}).\n\nThe original input data: {original_testcase}.\n\nThe input data after the function is called: {testcase['input']}.\n\nSee https://bit.ly/glasgowcs_objinput_explainer for more information."
+		
+		# Check the input, the outputted types and the output
+		assert original_testcase == testcase['input'], error_msg_inputchange
+		assert output_type == expected_output_type, error_msg_type
+		assert output == expected_output, error_msg_content
 		
 		print("OK.")
 		
-	
 	footer = f"{len(testcases)} testcases PASSED"
 
 	print("-"*len(header))

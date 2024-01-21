@@ -4,7 +4,7 @@ import copy
 import numpy as np
 from scipy.sparse.csr import csr_matrix
 
-from glasgowcs_labtest.utils import round_data, round_sparse_matrix
+from glasgowcs_labtest.utils import to_type, round_data, round_sparse_matrix
 
 def run_testcases(function, testcases):
 	header = f"LABTEST: Running {len(testcases)} testcases"
@@ -18,24 +18,36 @@ def run_testcases(function, testcases):
 		
 		print(f"Input: {str(testcase['input'])}. Running... ",)
 		
+		# Copy to input test case to check if it has been changed
 		original_testcase = copy.deepcopy(testcase['input'])
-		input_txt = str(testcase['input'])[1:-1].rstrip(',') # Strip off the brackets and potential right comma for nice output
 		
 		# Run the function and get the output
 		output = function(*testcase['input'])
+		output_type = to_type(output)
 		
-		error_msg = f"\n\nERROR: Expected the output of {function.__name__}({input_txt}) to be {testcase['output']}. Got {output}."
+		# Strip off the brackets and potential right comma for nice output
+		input_txt = str(testcase['input'])[1:-1].rstrip(',')
 		
-		assert original_testcase == testcase['input'], f"ERROR: The input data to the function has been changed during execution.\n\nFunction call: {function.__name__}({input_txt}).\n\nThe original input data: {original_testcase}.\n\nThe input data after the function is called: {testcase['input']}.\n\nSee https://bit.ly/glasgowcs_objinput_explainer for more information."
+		# Get the expected results and types
+		expected_output = testcase['output']
+		expected_output_type = to_type(expected_output)
 		
+		# Do some numerical rounding (in case that matters for comparing numbers)
 		output = round_data(output, places=5)
-		testcase['output'] = round_data(testcase['output'], places=5)
+		expected_output = round_data(expected_output, places=5)
 		
-		assert output == testcase['output'], error_msg
+		# Prepare possible error messages
+		error_msg_type = f"\n\nERROR: Expected the type of the output of {function.__name__}({input_txt}) to be {expected_output_type}. Got {output_type}."
+		error_msg_content = f"\n\nERROR: Expected the output of {function.__name__}({input_txt}) to be {expected_output}. Got {output}."
+		error_msg_inputchange = f"ERROR: The input data to the function has been changed during execution.\n\nFunction call: {function.__name__}({input_txt}).\n\nThe original input data: {original_testcase}.\n\nThe input data after the function is called: {testcase['input']}.\n\nSee https://bit.ly/glasgowcs_objinput_explainer for more information."
+		
+		# Check the input, the outputted types and the output
+		assert original_testcase == testcase['input'], error_msg_inputchange
+		assert output_type == expected_output_type, error_msg_type
+		assert output == expected_output, error_msg_content
 		
 		print("OK.")
 		
-	
 	footer = f"{len(testcases)} testcases PASSED"
 
 	print("-"*len(header))
@@ -53,27 +65,27 @@ def run_scipy_sparse_testcases(function, testcases):
 		
 		print(f"Input: {str(testcase['input'])}. Running... ",)
 		
+		# Copy to input test case to check if it has been changed
 		original_testcase = copy.deepcopy(testcase['input'])
 		input_txt = str(testcase['input'])[1:-1].rstrip(',') # Strip off the brackets and potential right comma for nice output
 		
+		# Run the function and get the output
 		result = function(*testcase['input'])
 
+		# Get the expected results
 		expected_matrix = np.array(testcase['output'])
-
-		func_name = function.__name__
-
 		
-		assert original_testcase == testcase['input'], f"ERROR: The input data to the function has been changed during execution.\n\nFunction call: {function.__name__}({input_txt}).\n\nThe original input data: {original_testcase}.\n\nThe input data after the function is called: {testcase['input']}.\n\nSee https://bit.ly/glasgowcs_objinput_explainer for more information."
-		assert isinstance(result, csr_matrix), f"\n\nERROR: Problem with run of the output of {function.__name__}({input_txt}).\n\n{func_name} is not returning the right type of data. It should be a csr_matrix which is the output of fit_transform function of a TfidfVectorizer. Instead it returned: {type(result)}"
-		assert expected_matrix.shape == result.shape, f"\n\nERROR: Problem with run of the output of {function.__name__}({input_txt}).\n\nThe output matrix shape does not match the expected {expected_matrix.shape}. Got {result.shape}"
-		
+		# Do some numerical rounding for comparing numbers
 		expected_matrix = round_sparse_matrix(expected_matrix, places=5)
 		result = round_sparse_matrix(result, places=5)
 		
+		# Check the input, the outputted types and the output
+		assert original_testcase == testcase['input'], f"ERROR: The input data to the function has been changed during execution.\n\nFunction call: {function.__name__}({input_txt}).\n\nThe original input data: {original_testcase}.\n\nThe input data after the function is called: {testcase['input']}.\n\nSee https://bit.ly/glasgowcs_objinput_explainer for more information."
+		assert isinstance(result, csr_matrix), f"\n\nERROR: Problem with run of the output of {function.__name__}({input_txt}).\n\n{function.__name__} is not returning the right type of data. It should be a csr_matrix which is the output of fit_transform function of a TfidfVectorizer. Instead it returned: {type(result)}"
+		assert expected_matrix.shape == result.shape, f"\n\nERROR: Problem with run of the output of {function.__name__}({input_txt}).\n\nThe output matrix shape does not match the expected {expected_matrix.shape}. Got {result.shape}"
 		assert np.array_equal(expected_matrix, result.todense()), f"\n\nERROR: Problem with run of the output of {function.__name__}({input_txt}).\n\nThe output matrix does not match the expected. \n\nExpected a sparse matrix equivalent to:\n{expected_matrix.tolist()}\n\nGot:\n{result.todense().tolist()}"
 
 		print("OK.")
-
 
 	footer = f"{len(testcases)} testcases PASSED"
 
