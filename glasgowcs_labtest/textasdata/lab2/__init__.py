@@ -75,14 +75,15 @@ def run_scipy_sparse_testcases(function, testcases):
 		# Get the expected results
 		expected_matrix = np.array(testcase['output'])
 		
-		# Do some numerical rounding for comparing numbers
-		expected_matrix = round_sparse_matrix(expected_matrix, places=5)
-		result = round_sparse_matrix(result, places=5)
-		
 		# Check the input, the outputted types and the output
 		assert original_testcase == testcase['input'], f"ERROR: The input data to the function has been changed during execution.\n\nFunction call: {function.__name__}({input_txt}).\n\nThe original input data: {original_testcase}.\n\nThe input data after the function is called: {testcase['input']}.\n\nSee https://bit.ly/glasgowcs_objinput_explainer for more information."
 		assert isinstance(result, csr_matrix), f"\n\nERROR: Problem with run of the output of {function.__name__}({input_txt}).\n\n{function.__name__} is not returning the right type of data. It should be a csr_matrix which is the output of fit_transform function of a TfidfVectorizer. Instead it returned: {type(result)}"
 		assert expected_matrix.shape == result.shape, f"\n\nERROR: Problem with run of the output of {function.__name__}({input_txt}).\n\nThe output matrix shape does not match the expected {expected_matrix.shape}. Got {result.shape}"
+		
+		# Do some numerical rounding for comparing numbers
+		expected_matrix = round_sparse_matrix(expected_matrix, places=5)
+		result = round_sparse_matrix(result, places=5)
+		
 		assert np.array_equal(expected_matrix, result.todense()), f"\n\nERROR: Problem with run of the output of {function.__name__}({input_txt}).\n\nThe output matrix does not match the expected. \n\nExpected a sparse matrix equivalent to:\n{expected_matrix.tolist()}\n\nGot:\n{result.todense().tolist()}"
 
 		print("OK.")

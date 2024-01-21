@@ -1,7 +1,7 @@
 from . import testsuite
 
 import copy
-from glasgowcs_labtest.utils import to_type
+from glasgowcs_labtest.utils import to_type, round_data
 
 def run_testcases(function, testcases):
 	header = f"LABTEST: Running {len(testcases)} testcases"
