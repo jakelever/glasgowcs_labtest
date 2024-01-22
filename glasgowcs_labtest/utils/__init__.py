@@ -80,7 +80,7 @@ def to_type(x):
 	else:
 		return type(x)
 
-def run_testcases(function, testcases):
+def run_testcases(function, testcases, expect_csr_matrix=False):
 	header = f"LABTEST: Running {len(testcases)} testcases"
 
 	print("-"*len(header))
@@ -102,23 +102,36 @@ def run_testcases(function, testcases):
 		# Strip off the brackets and potential right comma for nice output
 		input_txt = str(testcase['input'])[1:-1].rstrip(',')
 		
-		# Get the expected results and types
-		expected_output = testcase['output']
-		expected_output_type = to_type(expected_output)
-		
-		# Do some numerical rounding (in case that matters for comparing numbers)
-		output = round_data(output, places=5)
-		expected_output = round_data(expected_output, places=5)
-		
-		# Prepare possible error messages
-		error_msg_type = f"\n\nERROR: Expected the type of the output of {function.__name__}({input_txt}) to be {expected_output_type}. Got {output_type}."
-		error_msg_content = f"\n\nERROR: Expected the output of {function.__name__}({input_txt}) to be {expected_output}. Got {output}."
+		# Check that the input data hasn't been changed
 		error_msg_inputchange = f"ERROR: The input data to the function has been changed during execution.\n\nFunction call: {function.__name__}({input_txt}).\n\nThe original input data: {original_testcase}.\n\nThe input data after the function is called: {testcase['input']}.\n\nSee https://bit.ly/glasgowcs_objinput_explainer for more information."
-		
-		# Check the input, the outputted types and the output
 		assert original_testcase == testcase['input'], error_msg_inputchange
-		assert output_type == expected_output_type, error_msg_type
-		assert output == expected_output, error_msg_content
+		
+		if expect_csr_matrix:
+			# Get the expected results
+			expected_matrix = np.array(testcase['output'])
+			
+			assert isinstance(output, csr_matrix), f"\n\nERROR: Problem with run of the output of {function.__name__}({input_txt}).\n\n{function.__name__} is not returning the right type of data. It should be a csr_matrix which is the output of fit_transform function of a TfidfVectorizer. Instead it returned: {type(output)}"
+			assert expected_matrix.shape == output.shape, f"\n\nERROR: Problem with run of the output of {function.__name__}({input_txt}).\n\nThe output matrix shape does not match the expected {expected_matrix.shape}. Got {output.shape}"
+			
+			# Do some numerical rounding for comparing numbers
+			expected_matrix = round_sparse_matrix(expected_matrix, places=5)
+			output = round_sparse_matrix(output, places=5)
+			
+			assert np.array_equal(expected_matrix, output.todense()), f"\n\nERROR: Problem with run of the output of {function.__name__}({input_txt}).\n\nThe output matrix does not match the expected. \n\nExpected a sparse matrix equivalent to:\n{expected_matrix.tolist()}\n\nGot:\n{output.todense().tolist()}"
+
+		else:
+			# Get the expected results and types
+			expected_output = testcase['output']
+			expected_output_type = to_type(expected_output)
+		
+			# Do some numerical rounding (in case that matters for comparing numbers)
+			output = round_data(output, places=5)
+			expected_output = round_data(expected_output, places=5)
+			
+			error_msg_type = f"\n\nERROR: Expected the type of the output of {function.__name__}({input_txt}) to be {expected_output_type}. Got {output_type}."
+			error_msg_content = f"\n\nERROR: Expected the output of {function.__name__}({input_txt}) to be {expected_output}. Got {output}."
+			assert output_type == expected_output_type, error_msg_type
+			assert output == expected_output, error_msg_content
 		
 		print("OK.")
 		
@@ -146,20 +159,7 @@ def run_scipy_sparse_testcases(function, testcases):
 		# Run the function and get the output
 		result = function(*testcase['input'])
 
-		# Get the expected results
-		expected_matrix = np.array(testcase['output'])
 		
-		# Check the input, the outputted types and the output
-		assert original_testcase == testcase['input'], f"ERROR: The input data to the function has been changed during execution.\n\nFunction call: {function.__name__}({input_txt}).\n\nThe original input data: {original_testcase}.\n\nThe input data after the function is called: {testcase['input']}.\n\nSee https://bit.ly/glasgowcs_objinput_explainer for more information."
-		assert isinstance(result, csr_matrix), f"\n\nERROR: Problem with run of the output of {function.__name__}({input_txt}).\n\n{function.__name__} is not returning the right type of data. It should be a csr_matrix which is the output of fit_transform function of a TfidfVectorizer. Instead it returned: {type(result)}"
-		assert expected_matrix.shape == result.shape, f"\n\nERROR: Problem with run of the output of {function.__name__}({input_txt}).\n\nThe output matrix shape does not match the expected {expected_matrix.shape}. Got {result.shape}"
-		
-		# Do some numerical rounding for comparing numbers
-		expected_matrix = round_sparse_matrix(expected_matrix, places=5)
-		result = round_sparse_matrix(result, places=5)
-		
-		assert np.array_equal(expected_matrix, result.todense()), f"\n\nERROR: Problem with run of the output of {function.__name__}({input_txt}).\n\nThe output matrix does not match the expected. \n\nExpected a sparse matrix equivalent to:\n{expected_matrix.tolist()}\n\nGot:\n{result.todense().tolist()}"
-
 		print("OK.")
 
 	footer = f"{len(testcases)} testcases PASSED"
@@ -217,22 +217,19 @@ def setup_docstring(labtest_function, all_testcases):
 	
 	labtest_function.__doc__ = docstring
 
-def run_labtests(function, all_testcases):
+def run_labtests(function, all_testcases, expect_csr_matrix=False):
 	validate_testcases(all_testcases)
 	
 	assert not isinstance(function, str), "You've passed in a string to labtest (perhaps the name of function to test?). You need to pass in the actual function instead. For example do labtest({function}) instead of labtest(\"{function}\")"
 
-	assert callable(function), f"Unable to call the function '{function_name}'. Is it a variable and not a function?"
-
 	function_name = function.__name__
 
+	assert callable(function), f"Unable to call the function '{function_name}'. Is it a variable and not a function?"
 	assert function_name in all_testcases, f"Couldn't find a test suite for function '{function_name}'. Does the name of the function match the description above?"
 	
 	function_testcases = all_testcases[function_name]
 	
 	if callable(function_testcases): # The testcases are actually a custom function (so call it with the function)
 		function_testcases(function)
-	elif function_name in ["tfidf_vectorize_with_sklearn","tfidf_vectorize_with_sklearn_and_spacy"]:
-		run_scipy_sparse_testcases(function, function_testcases)
 	else:
-		run_testcases(function, function_testcases)
+		run_testcases(function, function_testcases, expect_csr_matrix)
