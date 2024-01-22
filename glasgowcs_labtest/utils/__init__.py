@@ -60,25 +60,23 @@ def round_sparse_matrix(m, places):
 	return m_copy
 	
 	
-def to_type(x):
+def to_unique_types(x):
 	"""
-	Converts a variable into its type for comparison and works recursively for lists and dictionaries
+	Converts a variable into a set of unique types (excluding lists, dicts and other common data structures)
 	
 	Args:
 		x: A variable of any time
 		
 	Returns:
-	A representation of the type of the variable (either just the type, a list of types, dictionary of types, etc)
+	A representation of the types of the variable (either just the type, a list of types, dictionary of types, etc)
 	"""
 	
-	if isinstance(x, list):
-		return [ to_type(j) for j in x ]
-	elif isinstance(x, set):
-		return set( to_type(j) for j in x )
+	if isinstance(x, list) or isinstance(x, set):
+		return set().union( *[to_unique_types(j) for j in x] )
 	elif isinstance(x, dict) or isinstance(x, Counter) or isinstance(x, defaultdict):
-		return { k:to_type(v) for k,v in x.items() }
+		return set().union( *[to_unique_types(j) for j in x.values()] )
 	else:
-		return type(x)
+		return set([type(x)])
 
 def run_testcases(function, testcases, expect_csr_matrix=False):
 	header = f"LABTEST: Running {len(testcases)} testcases"
@@ -97,7 +95,6 @@ def run_testcases(function, testcases, expect_csr_matrix=False):
 		
 		# Run the function and get the output
 		output = function(*testcase['input'])
-		output_type = to_type(output)
 		
 		# Strip off the brackets and potential right comma for nice output
 		input_txt = str(testcase['input'])[1:-1].rstrip(',')
@@ -122,15 +119,19 @@ def run_testcases(function, testcases, expect_csr_matrix=False):
 		else:
 			# Get the expected results and types
 			expected_output = testcase['output']
-			expected_output_type = to_type(expected_output)
-		
+			
+			# Look at the expected output types (e.g. int, str, etc) and see if the function outputs any unexpected ones
+			output_types = to_unique_types(output)
+			expected_output_types = to_unique_types(expected_output)
+			unexpected_types = output_types.difference(expected_output_types)
+			error_msg_type = f"\n\nERROR: Expected the types of the output {function.__name__}({input_txt}) to include {expected_output_types}. Got unexpected types: {unexpected_types}."
+			assert len(unexpected_types) == 0, error_msg_type
+			
 			# Do some numerical rounding (in case that matters for comparing numbers)
 			output = round_data(output, places=5)
 			expected_output = round_data(expected_output, places=5)
 			
-			error_msg_type = f"\n\nERROR: Expected the type of the output of {function.__name__}({input_txt}) to be {expected_output_type}. Got {output_type}."
 			error_msg_content = f"\n\nERROR: Expected the output of {function.__name__}({input_txt}) to be {expected_output}. Got {output}."
-			assert output_type == expected_output_type, error_msg_type
 			assert output == expected_output, error_msg_content
 		
 		print("OK.")
