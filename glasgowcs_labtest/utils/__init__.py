@@ -221,7 +221,7 @@ def setup_docstring(labtest_function, all_testcases):
 def run_labtests(function, all_testcases, expect_csr_matrix=False):
 	validate_testcases(all_testcases)
 	
-	assert not isinstance(function, str), "You've passed in a string to labtest (perhaps the name of function to test?). You need to pass in the actual function instead. For example do labtest({function}) instead of labtest(\"{function}\")"
+	assert not isinstance(function, str), f"You've passed in a string to labtest (perhaps the name of function to test?). You need to pass in the actual function instead. For example do labtest({function}) instead of labtest(\"{function}\")"
 
 	function_name = function.__name__
 
