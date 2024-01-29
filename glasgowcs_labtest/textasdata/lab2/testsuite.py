@@ -122,10 +122,10 @@ def make_tests():
 
 "make_onehot_unk": [
 	{"input": (["bad", "irn", "glasgow", "edinburgh", "glasgow", "bad", "bad"], {"bru": 0, "irn": 1, "glasgow": 2, "bad": 3, "coffee": 4, "kelvin": 5, "<UNK>": 6}), "output": {3: 1, 2: 1, 1: 1, 6: 1}},
-	{"input": (["thames", "kelvin", "kelvin", "irn", "clyde", "irn"], {"coffee": 0, "shop": 1, "irn": 2, "kelvin": 3, "<UNK>": 4}), "output": {2: 1, 3: 1, 4: 1}},
+	{"input": (["thames", "kelvin", "kelvin", "danube", "irn", "clyde", "irn", "clyde"], {"coffee": 0, "shop": 1, "irn": 2, "kelvin": 3, "<UNK>": 4}), "output": {2: 1, 3: 1, 4: 1}},
 	{"input": (["culture", "good", "city", "culture", "books"], {"irn": 0, "good": 1, "culture": 2, "city": 3, "glasgow": 4, "<UNK>": 5}), "output": {3: 1, 2: 1, 1: 1, 5: 1}},
-	{"input": (["city", "university", "edinburgh", "city", "glasgow", "shop", "university", "library"], {"city": 0, "shop": 1, "glasgow": 2, "irn": 3, "university": 4, "<UNK>": 5}), "output": {0: 1, 2: 1, 1: 1, 4: 1, 5: 1}},
-	{"input": (["shop", "shop", "shop", "bru", "irn"], {"shop": 0, "bad": 1, "bru": 2, "irn": 3, "python": 4}), "output": {2: 1, 3: 1, 0: 1}},
+	{"input": (["city", "university", "edinburgh", "city", "glasgow", "shop", "university", "library", "train"], {"city": 0, "shop": 1, "glasgow": 2, "irn": 3, "university": 4, "<UNK>": 5}), "output": {0: 1, 2: 1, 1: 1, 4: 1, 5: 1}},
+	{"input": (["shop", "shop", "shop", "bru", "irn"], {"shop": 0, "bad": 1, "bru": 2, "irn": 3, "<UNK>": 4}), "output": {2: 1, 3: 1, 0: 1}},
 ],
 
 "sparse_euclidean_distance": [
