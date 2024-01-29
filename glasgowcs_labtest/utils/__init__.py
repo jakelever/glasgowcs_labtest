@@ -77,6 +77,20 @@ def to_unique_types(x):
 		return set().union( *[to_unique_types(j) for j in x.values()] )
 	else:
 		return set([type(x)])
+		
+def allow_numpy_numerical_types(type_set):
+	"""
+	Remap a set of data types to convert numpy numerical types to Pythons (to be more flexible with typing)
+	
+	Args:
+		type_set: Set of types
+		
+	Returns:
+	A set of types with all numpy numerical types replaced with simpler Python types
+	"""
+	mapping = {np.bool_ : bool, np.byte : int, np.ubyte : int, np.short : int, np.ushort : int, np.intc : int, np.uintc : int, np.int_ : int, np.uint : int, np.longlong : int, np.ulonglong : int, np.half : float, np.float16 : float, np.single : float, np.double : float, np.longdouble : float, np.csingle : float, np.cdouble : float, np.clongdouble : float}
+	
+	return set( mapping.get(x,x) for x in type_set )
 
 def run_testcases(function, testcases, expect_csr_matrix=False):
 	header = f"LABTEST: Running {len(testcases)} testcases"
@@ -121,7 +135,7 @@ def run_testcases(function, testcases, expect_csr_matrix=False):
 			expected_output = testcase['output']
 			
 			# Look at the expected output types (e.g. int, str, etc) and see if the function outputs any unexpected ones
-			output_types = to_unique_types(output)
+			output_types = allow_numpy_numerical_types(to_unique_types(output))
 			expected_output_types = to_unique_types(expected_output)
 			unexpected_types = output_types.difference(expected_output_types)
 			error_msg_type = f"\n\nERROR: Expected the types of the output {function.__name__}({input_txt}) to include {expected_output_types}. Got unexpected types: {unexpected_types}."
