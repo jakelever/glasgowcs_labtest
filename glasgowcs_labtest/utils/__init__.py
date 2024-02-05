@@ -134,12 +134,16 @@ def run_testcases(function, testcases, expect_csr_matrix=False):
 			# Get the expected results and types
 			expected_output = testcase['output']
 			
+			#Unused stricter type checking - may be used in future
+			#error_msg_type = f"\n\nERROR: Expected the main type of the output {function.__name__}({input_txt}) to be {type(expected_output)}. Got type: {type(output)}."
+			#assert type(expected_output) == type(output), error_msg_type
+			
 			# Look at the expected output types (e.g. int, str, etc) and see if the function outputs any unexpected ones
 			output_types = allow_numpy_numerical_types(to_unique_types(output))
 			expected_output_types = to_unique_types(expected_output)
 			unexpected_types = output_types.difference(expected_output_types)
-			error_msg_type = f"\n\nERROR: Expected the types of the output {function.__name__}({input_txt}) to include {expected_output_types}. Got unexpected types: {unexpected_types}."
-			assert len(unexpected_types) == 0, error_msg_type
+			error_msg_subtype = f"\n\nERROR: Expected the types of the output {function.__name__}({input_txt}) to include {expected_output_types}. Got unexpected types: {unexpected_types}."
+			assert len(unexpected_types) == 0, error_msg_subtype
 			
 			# Do some numerical rounding (in case that matters for comparing numbers)
 			output = round_data(output, places=5)
