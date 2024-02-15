@@ -5,7 +5,7 @@ from distutils.core import setup
 from setuptools import setup,find_packages
 
 setup(name='glasgowcs_labtest',
-	version='1.1.0',
+	version='1.1.1',
 	description='Testing framework for Glasgow CS classes',
 	url='https://github.com/jakelever/glasgowcs_labtest',
 	author='Jake Lever',
