@@ -105,17 +105,17 @@ def run_testcases(function, testcases, expect_csr_matrix=False):
 		print(f"Input: {str(testcase['input'])}. Running... ",)
 		
 		# Copy to input test case to check if it has been changed
-		original_testcase = copy.deepcopy(testcase['input'])
+		copy_of_test_input = copy.deepcopy(testcase['input'])
 		
 		# Run the function and get the output
-		output = function(*testcase['input'])
+		output = function(*copy_of_test_input)
 		
 		# Strip off the brackets and potential right comma for nice output
 		input_txt = str(testcase['input'])[1:-1].rstrip(',')
 		
 		# Check that the input data hasn't been changed
-		error_msg_inputchange = f"ERROR: The input data to the function has been changed during execution.\n\nFunction call: {function.__name__}({input_txt}).\n\nThe original input data: {original_testcase}.\n\nThe input data after the function is called: {testcase['input']}.\n\nSee https://bit.ly/glasgowcs_objinput_explainer for more information."
-		assert original_testcase == testcase['input'], error_msg_inputchange
+		error_msg_inputchange = f"ERROR: The input data to the function has been changed during execution. Re-implement your code to not make changes to the input data. See https://bit.ly/glasgowcs_objinput_explainer for more information.\n\nFunction call: {function.__name__}({input_txt}).\n\nThe original input data: {testcase['input']}.\n\nThe input data after the function is called: {copy_of_test_input}.\n\n"
+		assert copy_of_test_input == testcase['input'], error_msg_inputchange
 		
 		if expect_csr_matrix:
 			# Get the expected results
