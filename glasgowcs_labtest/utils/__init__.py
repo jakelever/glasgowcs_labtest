@@ -121,14 +121,14 @@ def run_testcases(function, testcases, expect_csr_matrix=False):
 			# Get the expected results
 			expected_matrix = np.array(testcase['output'])
 			
-			assert isinstance(output, csr_matrix), f"\n\nERROR: Problem with run of the output of {function.__name__}({input_txt}).\n\n{function.__name__} is not returning the right type of data. It should be a csr_matrix which is the output of fit_transform function of a TfidfVectorizer. Instead it returned: {type(output)}"
+			assert isinstance(output, csr_matrix), f"\n\nERROR: Problem with the output of {function.__name__}({input_txt}).\n\n{function.__name__} is not returning the right type of data. It should be a csr_matrix which is the output of fit_transform function of a TfidfVectorizer. Instead it returned: {type(output)}"
 			assert expected_matrix.shape == output.shape, f"\n\nERROR: Problem with run of the output of {function.__name__}({input_txt}).\n\nThe output matrix shape does not match the expected {expected_matrix.shape}. Got {output.shape}"
 			
 			# Do some numerical rounding for comparing numbers
 			expected_matrix = round_sparse_matrix(expected_matrix, places=5)
 			output = round_sparse_matrix(output, places=5)
 			
-			assert np.array_equal(expected_matrix, output.todense()), f"\n\nERROR: Problem with run of the output of {function.__name__}({input_txt}).\n\nThe output matrix does not match the expected. \n\nExpected a sparse matrix equivalent to:\n{expected_matrix.tolist()}\n\nGot:\n{output.todense().tolist()}"
+			assert np.array_equal(expected_matrix, output.todense()), f"\n\nERROR: Problem with the output of {function.__name__}({input_txt}).\n\nThe output matrix does not match the expected. \n\nExpected a sparse matrix equivalent to:\n{expected_matrix.tolist()}\n\nGot:\n{output.todense().tolist()}"
 
 		else:
 			# Get the expected results and types
