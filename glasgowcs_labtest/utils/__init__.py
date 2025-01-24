@@ -134,6 +134,10 @@ def run_testcases(function, testcases, expect_csr_matrix=False):
 			# Get the expected results and types
 			expected_output = testcase['output']
 			
+			# Allow Counters to be returned when dictionaries are asked for
+			if isinstance(expected_output,dict) and isinstance(output,Counter):
+				output = dict(output)
+			
 			# Enabled stricter type checking (e.g. checks that a Counter is returned and not a dictionary)
 			error_msg_type = f"\n\nERROR: Expected the main type of the output {function.__name__}({input_txt}) to be {type(expected_output)}. Got type: {type(output)}."
 			allowed_main_types = allow_numpy_numerical_types({type(expected_output)})
