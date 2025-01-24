@@ -135,7 +135,7 @@ def run_testcases(function, testcases, expect_csr_matrix=False):
 			expected_output = testcase['output']
 			
 			# Allow Counters to be returned when dictionaries are asked for
-			if isinstance(expected_output,dict) and isinstance(output,Counter):
+			if type(expected_output) is dict and type(output) is Counter:
 				output = dict(output)
 			
 			# Enabled stricter type checking (e.g. checks that a Counter is returned and not a dictionary)
