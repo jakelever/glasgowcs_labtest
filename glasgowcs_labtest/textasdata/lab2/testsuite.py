@@ -39,6 +39,9 @@ def run_make_vocabulary_test(make_vocabulary,with_unk):
 		else:
 			assert sorted(vocab.keys()) == sorted(unique_tokens), f"ERROR: Returned dictionary keys should match the unique tokens (order doesn't matter). Got {sorted(vocab.keys())}. Expected {sorted(unique_tokens)}."
 		assert sorted(vocab.values()) == list(range(0,N)), f"ERROR: Returned dictionary values should start from 0 and go up to the number of tokens minus 1. Which token is given which number does not matter. Got {sorted(vocab.values())}. Expected {list(range(0,N))}."
+		
+		print(f"Output: {str(vocab)}")
+		print("OK.\n")
 	
 	footer = f"{len(input_testcases)} testcases PASSED"
 

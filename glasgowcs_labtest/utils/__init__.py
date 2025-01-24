@@ -102,7 +102,7 @@ def run_testcases(function, testcases, expect_csr_matrix=False):
 	for testcase in testcases:
 		assert isinstance(testcase['input'], tuple), "A testcase has been incorrectly set up. Inputs for testcases must be tuples"
 		
-		print(f"Input: {str(testcase['input'])}. Running... ",)
+		print(f"Input: {str(testcase['input'])}. Running... ")
 		
 		# Copy to input test case to check if it has been changed
 		copy_of_test_input = copy.deepcopy(testcase['input'])
@@ -129,7 +129,9 @@ def run_testcases(function, testcases, expect_csr_matrix=False):
 			output = round_sparse_matrix(output, places=5)
 			
 			assert np.array_equal(expected_matrix, output.todense()), f"\n\nERROR: Problem with the output of {function.__name__}({input_txt}).\n\nThe output matrix does not match the expected. \n\nExpected a sparse matrix equivalent to:\n{expected_matrix.tolist()}\n\nGot:\n{output.todense().tolist()}"
-
+			
+			csr_matrix_repr = str(output).replace('\n',' ').replace('\t',':')
+			print(f"Output [csr_matrix]: {csr_matrix_repr}")
 		else:
 			# Get the expected results and types
 			expected_output = testcase['output']
@@ -157,7 +159,8 @@ def run_testcases(function, testcases, expect_csr_matrix=False):
 			error_msg_content = f"\n\nERROR: Expected the output of {function.__name__}({input_txt}) to be {expected_output}. Got {output}."
 			assert output == expected_output, error_msg_content
 		
-		print("OK.")
+			print(f"Output: {str(output)}")
+		print("OK.\n")
 		
 	footer = f"{len(testcases)} testcases PASSED"
 
@@ -165,34 +168,6 @@ def run_testcases(function, testcases, expect_csr_matrix=False):
 	print(footer)
 	print("-"*len(header))
 	
-def run_scipy_sparse_testcases(function, testcases):
-	header = f"LABTEST: Running {len(testcases)} testcases"
-
-	print("-"*len(header))
-	print(header)
-	print("-"*len(header))
-
-	for testcase in testcases:
-		
-		print(f"Input: {str(testcase['input'])}. Running... ",)
-		
-		# Copy to input test case to check if it has been changed
-		original_testcase = copy.deepcopy(testcase['input'])
-		input_txt = str(testcase['input'])[1:-1].rstrip(',') # Strip off the brackets and potential right comma for nice output
-		
-		# Run the function and get the output
-		result = function(*testcase['input'])
-
-		
-		print("OK.")
-
-	footer = f"{len(testcases)} testcases PASSED"
-
-	print("-"*len(header))
-	print(footer)
-	print("-"*len(header))
-
-
 def validate_testcases(all_testcases):
 	assert isinstance(all_testcases, dict), "The labtest method is malfunctioning as it is not correctly passing in the test suite for this lab"
 	
