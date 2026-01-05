@@ -24,9 +24,9 @@ def round_data(x, places):
 	"""
 
 	if isinstance(x, csr_matrix):
-		m_copy = copy.deepcopy(m)
-		m_copy.data = np.round(m_copy.data, places)
-		return m_copy
+		x_copy = copy.deepcopy(x)
+		x_copy.data = np.round(x_copy.data, places)
+		return x_copy
 	elif isinstance(x, np.ndarray):
 		return np.round(x, places)
 	elif isinstance(x, dict):
