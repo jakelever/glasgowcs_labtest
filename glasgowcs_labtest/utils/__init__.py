@@ -54,7 +54,7 @@ def round_sparse_matrix(m, places):
 	A copy of the sparse matrix with all values rounded
 
 	"""
-	
+	assert isinstance(m, csr_matrix)
 	m_copy = copy.deepcopy(m)
 	m_copy.data = np.round(m_copy.data, 2)
 	return m_copy
