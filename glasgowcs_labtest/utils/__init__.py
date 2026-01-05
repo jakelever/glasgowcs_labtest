@@ -8,7 +8,7 @@ def round_data(x, places):
 	"""
 	Takes a data structure (potentially of nested data) and rounds all the
 	floating point values into to the given number of decimal places. It works
-	with nested structures (e.g. list of lists, etc).
+	with nested structures (e.g. list of lists, etc) and matrices.
 
 	Data structures can contain any of dict, list, float, int, string
 	Counter or defaultdict.
@@ -23,7 +23,13 @@ def round_data(x, places):
 
 	"""
 
-	if isinstance(x, dict):
+	if isinstance(x, csr_matrix):
+		m_copy = copy.deepcopy(m)
+		m_copy.data = np.round(m_copy.data, places)
+		return m_copy
+	elif isinstance(x, np.ndarray):
+		return np.round(x, places)
+	elif isinstance(x, dict):
 		return {key:round_data(val,places) for key,val in x.items() }
 	elif isinstance(x, list):
 		return [round_data(val,places) for val in x ]
@@ -40,25 +46,6 @@ def round_data(x, places):
 		return x
 	else:
 		raise RuntimeError("ERROR: Data structure contains an element that is not a dict, list, float, int, string, Counter or defaultdict")
-
-def round_sparse_matrix(m, places):
-	"""
-	Rounds a scipy sparse matrix (e.g. csr_matrix) to
-	the given number of decimal places.
-
-	Args:
-		m: The sparse matrix
-		places: Number of decimal places to round to
-
-	Returns:
-	A copy of the sparse matrix with all values rounded
-
-	"""
-	assert isinstance(m, csr_matrix)
-	m_copy = copy.deepcopy(m)
-	m_copy.data = np.round(m_copy.data, 2)
-	return m_copy
-	
 	
 def get_unique_types_recursively(x):
 	"""
@@ -125,8 +112,8 @@ def run_testcases(function, testcases, expect_csr_matrix=False):
 			assert expected_matrix.shape == output.shape, f"\n\nERROR: Problem with run of the output of {function.__name__}({input_txt}).\n\nThe output matrix shape does not match the expected {expected_matrix.shape}. Got {output.shape}"
 			
 			# Do some numerical rounding for comparing numbers
-			expected_matrix = round_sparse_matrix(expected_matrix, places=5)
-			output = round_sparse_matrix(output, places=5)
+			expected_matrix = round_data(expected_matrix, places=5)
+			output = round_data(output, places=5)
 			
 			assert np.array_equal(expected_matrix, output.todense()), f"\n\nERROR: Problem with the output of {function.__name__}({input_txt}).\n\nThe output matrix does not match the expected. \n\nExpected a sparse matrix equivalent to:\n{expected_matrix.tolist()}\n\nGot:\n{output.todense().tolist()}"
 			
